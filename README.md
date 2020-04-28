@@ -27,4 +27,4 @@ The datasets used in this paper are all online available, you can obtain it thro
 * the cardiac cine dataset with the size 256×256×30 (http://www.doc.ic.ac.uk/~jc1006/software.html), rename  the dataset as cine_256_30 and put it to directory “Dataset”.
 
 # reference 
-Liu Y, Liu T, Liu J, et al. Smooth robust tensor principal component analysis for compressed sensing of dynamic MRI[J]. Pattern Recognition, 2020, 102: 107252.
+Yipeng Liu, Tengteng Liu, Jiani Liu, Ce Zhu, "Smooth Robust Tensor Principal Component Analysis for Compressed Sensing of Dynamic MRI ," Pattern Recognition, vol. 102, no. 107252, 2020. DOI: 10.1016/j.patcog.2020.107252 
