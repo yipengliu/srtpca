@@ -1,0 +1,44 @@
+#!/bin/csh
+
+foreach file (CPAnalysis WPAnalysis FWT_PO FWT2_PO IWT_PO \
+	IWT2_PO UpDyadHi UpDyadLo DownDyadHi DownDyadLo dct_iv \
+	FCPSynthesis FWPSynthesis FastAllSeg FastEntProfile off_filter \
+	dct_ii dst_ii dct_iii dst_iii \
+        FWT_PBS IWT_PBS \
+        FWT_TI IWT_TI \
+        FMIPT IMIPT \
+        FAIPT IAIPT LMIRefineSeq MedRefineSeq)
+		echo $file.c
+		mex -V4 $file.c
+end
+
+mv CPAnalysis.mex* ../Packets/One-D
+mv WPAnalysis.mex* ../Packets/One-D
+mv FWT_PO.mex* ../Orthogonal
+mv FWT2_PO.mex* ../Orthogonal
+mv IWT_PO.mex* ../Orthogonal
+mv IWT2_PO.mex* ../Orthogonal
+mv UpDyadHi.mex* ../Orthogonal
+mv UpDyadLo.mex* ../Orthogonal
+mv DownDyadHi.mex* ../Orthogonal
+mv DownDyadLo.mex* ../Orthogonal
+mv dct_iv.mex* ../Packets/One-D
+mv FCPSynthesis.mex* ../Pursuit
+mv FWPSynthesis.mex* ../Pursuit
+mv FastAllSeg.mex* ../Papers/MinEntSeg
+mv FastEntProfile.mex* ../Papers/MinEntSeg
+mv off_filter.mex* ../Papers/MinEntSeg
+mv dct_ii.mex* ../Meyer
+mv dst_ii.mex* ../Meyer
+mv dct_iii.mex* ../Meyer
+mv dst_iii.mex* ../Meyer
+mv FWT_PBS.mex* ../Biorthogonal
+mv IWT_PBS.mex* ../Biorthogonal
+mv FWT_TI.mex* ../Invariant
+mv IWT_TI.mex* ../Invariant
+mv FMIPT.mex* ../Median 
+mv IMIPT.mex* ../Median
+mv FAIPT.mex* ../Papers/MIPT
+mv IAIPT.mex* ../Papers/MIPT
+mv LMIRefineSeq.mex* ../Papers/MIPT
+mv MedRefineSeq.mex* ../Papers/MIPT

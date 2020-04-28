@@ -1,0 +1,6137 @@
+ aconv -- Convolution Tool for Two-Scale Transform
+  Usage
+    y = aconv(f,x)
+  Inputs
+    f    filter
+    x    1-d signal
+  Outputs
+    y    filtered result
+
+  Description
+    Filtering by periodic convolution of x with the
+    time-reverse of f.
+
+  See Also
+    iconv, UpDyadHi, UpDyadLo, DownDyadHi, DownDyadLo
+
+ AIDyadDown -- Average-Interpolating DownSampling Operator
+  Usage
+    [beta,alfa] = AIDyadDown(afine,D,F,EF)
+  Inputs
+    afine   fine-scale block averages
+    D       degree of polynomial fit in average-interpolation
+    F       filter implementing average-interpolation
+    EF      edge filter of average-interpolation
+  Outputs
+    beta    coarse-scale block averages
+    alfa    detail corrections
+
+  Description
+    Splits information afine on fine scale block averages into
+    coarse scale block averages beta and detail corrections alfa.
+
+  See Also
+    IWT_AI, AIRefine, MakeAIFilter
+ 
+ AIDyadUp -- Average-Interpolating UpSampling Operator
+  Usage
+    afine = AIDyadUp(beta,alfa,D,F,EF)
+  Inputs
+    beta    coarse-scale block averages
+    alfa    detail corrections
+    D       degree of polynomial fit in average-interpolation
+    F       filter implementing average-interpolation
+    EF      edge filter of average-interpolation
+  Outputs
+    afine   fine-scale block averages
+
+  Description
+    Implements the Coarse-to-Fine phase of the average-interpolating
+    wavelet transform. Takes coarse scale block average and detail
+    corrections and synthesizes fine-scale block averages.
+
+  See Also
+    IWT_AI, AIRefine, MakeAIFilter
+ 
+ AIRefine -- Average-Interpolating Refinement Scheme
+  Usage
+    fine = AIRefine(coarse,D,Filter,EF)
+  Inputs
+    coarse    1-d signal at a coarse scale: length(coarse)=n
+    D         D degree of polynomials used for interpolation
+    Filter    interpolating filter from MakeAIFilter(D)
+    EF        Boundary filter from MakeAIBdryFilter(D)
+  Outputs
+    fine      1-d signal at a fine scale: length(fine) = 2*n
+
+  Description
+    Average-Interpolating Refinement scheme is used to refine boxcar
+    averages on a grid of n points, imputing averages on a finer grid
+    of 2n points.
+
+    The average of imputed pairs at (2*i-1,2i) at fine scale reproduce
+    values i at the coarse scale; the pairs are obtained by polynomial
+    interpolation of the coarse averages near i.
+
+  See Also
+    AIDyadUp, AIDyaAIown, FWT_AI, IWT_AI
+
+ AIRefine2d -- 2-d Refinement based on Average-Interpolation
+  Usage
+    fine  = AIRefine2d(coarse,L,D,Filter,Efil)
+  Inputs
+    coarse    2-d image at a coarse scale: length(coarse)=n
+    L         integer >=1. number of generations to refine by
+    D         D degree of polynomials used for interpolation
+    Filter    interpolating filter from MakeAIFilter(D)
+    EFil      Boundary filter from MakeAIBdryFilter(D)
+  Outputs
+    fine      2-d image at a fine scale: size(fine) = 2^L * size(coarse)
+
+  Description
+    Average-Interpolating Refinement scheme is used to refine
+    boxcar averages on a grid of n*n points, imputing averages
+    on a finer grid of 2^L n * 2^L n points.
+
+  See Also
+    AIRefine
+
+ AppendTitle -- Utility to Build Title String
+  Usage
+    titl = AppendTitle(Default,Extra)
+  Inputs
+    Default    string. Default value of title
+    Extra      string. Extra piece to add
+  Output
+    titl       title string
+  Description
+    if Extra begins '+', titl is the concatenation
+    of Default and the remainder of Extra
+    Otherwise titl is Extra (if Extra is nonempty) or
+    Default (if Extra is empty).
+
+     Default          Extra         titl
+    'Spectrogram'     []            'Spectrogram'
+    'Spectrogram'    '+: w=20'      'Spectrogram: w=20'
+    'Spectrogram'    'New Data'     'New Data'
+
+
+ CPTour -- Cosine packet decomposition & Best Basis analysis
+  Usage
+    [cp, btree] = AutoCPTour(Format,x,D,title)
+  Inputs
+    x        1-d signal to analyze by Cosine Packets
+    D        maximum depth of dyadic subdivision of time domain
+    title    name of signal [optional]
+    pt      boolean for PlotPacketTable
+    bt      boolean for PlotBasisTree
+    pht     boolean for PlotPhaseTiling
+    cn      boolean for PlotCompressNumbers
+    php     boolean for PlotPhasePlane
+  Outputs 
+    cp       packet table (see CPAnalysis)
+    btree    basis tree of best time-frequency basis
+
+  Description
+    Same as CPTour, but without interactivity. The elements which have
+    to be plotted are given as inputs.
+
+  Side Effects
+    plot of Cosine packet Table
+    tree plot, best basis
+    phase plot, best basis
+    printout, entropy, best basis
+
+  See Also
+    CPAnalysis, BestBasis, PlotPhasePlane, PlotBasisTree, CPTour
+
+ AutoImage -- Image display of object assuming arbitrary values
+  Usage
+    AutoImage(img [,x,y])
+  Inputs
+    img     2-d image
+    x,y     where x and y are vectors, specifies the labeling of
+   	     X- and Y-axes, but produces the same image as AutoImage(img).
+
+  Side Effects
+    The object img, assuming arbitrary values, is scaled to the 
+    range (0,255) and displayed as an image with 256 shades of gray.
+
+  Description
+    If the object is already scaled to the range (0,255) you may
+    use GrayImage.
+
+  See Also
+    GrayImage
+
+ AutoWPTour -- Wavelet packet decomposition & Best Basis analysis
+  Usage
+    [wp, btree] = AutoWPTour(x,D,qmf,titlestr)
+  Inputs  
+    x       1-d signal to analyze by Wavelet Packets
+    D       fineness of frequency splitting
+    qmf     quadrature mirror filter (e.g. Coiflet c3)
+    title   name of signal
+    pt      boolean for PlotPacketTable
+    bt      boolean for PlotBasisTree
+    pht     boolean for PlotPhaseTiling
+    cn      boolean for PlotCompressNumbers
+    php     boolean for PlotPhasePlane
+  Outputs
+    wp      Wavelet packet table (see WPAnalysis)
+    btree   basis tree of best time-frequency basis
+
+  Description
+    Same as WPTour, but without interactivity. The elements which have
+    to be plotted are given as inputs.
+
+  Side Effects
+    plot of Wavelet packet Table
+    tree plot, best basis
+    phase plot, best basis
+    printout, entropy, best basis
+
+  See Also
+    WPAnalysis, BestBasis, PlotPhasePlane, PlotBasisTree, WPTour
+
+ AWT -- Analytical Wavelet Transform
+  Usage
+    awt = AWT(x,nvoice,Name,sigma2,par2);
+  Inputs
+    x	     signal, could be complex
+    nvoice  number of voices
+            default = 12
+    Name    Type of Window function, so far only "Gaussian" window available
+    sigma2    first parameter, for Gaussian window, it could be variance,
+ 	     default = 1
+    par2    another parameter, for Gaussian, it's xi(shifting frequency)
+            default = 5
+  Outputs
+    awt     Analytical wavelet transform of x
+  Side Effects
+  Description
+    Coarsest scale is '2', finest scale is (log2(n)-5);
+    awt is a n by nscale matrix;
+  Algorithm
+     
+  Examples
+    n = 1024;
+    t = ((1:n)./n - .5).*pi;
+    f = exp(i*t.^2);
+    awt = AWT(f);
+    ImageCWT(awt,'Individual','hot');
+    ix = [((n/2+1):n),(1:n/2)];
+    plot(abs(awt(ix,1)))	% should looks Gaussian
+    hold on
+    plot(abs(awt(ix,13)))	% should looks Gaussian
+    plot(abs(awt(ix,25)))	% should looks Gaussian
+  See Also
+    ImageCWT
+  References
+    Mallat, "A Wavelet Tour of Signal Processing";
+             4.4.3 Analytical Wavelet Transform
+
+ Best2dBasis -- Coifman-Wickerhauser Best-2d-Basis Algorithm
+  Usage
+    [btree,vtree] = Best2dBasis(sqtree,D)
+  Inputs
+    sqtree   stat-quadtree (output by Calc2dStatTree)
+    D        maximum depth of tree-search
+  Outputs
+    btree    basis-quadtree of best basis
+    vtree    value of components of best basis
+             vtree(1) holds value of best basis
+
+  Description
+    The best-basis algorithm is used to pick out the ``best'' 
+    basis from all the possible bases in the packet table.
+    Here ``best'' means minimizing an additive measure of
+    information, called entropy by Coifman and Wickerhauser.
+
+    Once the stat-quadtree of entropy values is created, Best2dBasis
+    selects the best basis using the pruning algorithm described in
+    Wickerhauser's book.
+ BestBasis -- Coifman-Wickerhauser Best-Basis Algorithm
+  Usage
+    [btree,vtree] = BestBasis(stree,D)
+  Inputs
+    stree    stat-tree (output by CalcStatTree)
+    D        maximum depth of tree-search
+  Outputs
+    btree    basis-tree of best basis
+    vtree    value of components of best basis
+             vtree(1) holds value of best basis
+
+  Description
+    The best-basis algorithm is used to pick out the ``best'' 
+    basis from all the possible bases in the packet table.
+    Here ``best'' means minimizing an additive measure of
+    information, called entropy by Coifman and Wickerhauser.
+
+    Once the stattree of entropy values is created, BestBasis
+    selects the best basis using the pruning algorithm described in
+    Wickerhauser's book.
+
+  Examples
+    [n,D] = dyadlength(signal);
+    qmf = MakeONFilter('Coiflet',3);
+    wp = WPAnalysis(signal,D,qmf);
+    stree = CalcStatTree(wp,'Entropy');
+    [btree,vtree] = BestBasis(stree,D);
+
+  Algorithm
+    Yale University has filed a patent application for this algorithm.
+    Commercial Development based on this algorithm should be cleared
+    by Yale University. Contact them for licensing information.
+
+  See Also
+    WPAnalysis, CalcStatTree, CPTour, WPTour
+
+  References
+    Wickerhauser, M.V. _Adapted_Wavelet_Analysis_
+
+ BestShift -- Best Circulant Shift of Signal
+  Usage
+    [shift,value] = BestShift(stat)
+  Inputs
+    stat     stat-tree (output by CalcShiftStat)
+    D        maximum depth of tree-search
+  Outputs
+    shift    path corresponding to optimal shift
+    value    minimizing value attained by optimal shift
+             value(1) holds value of best shift
+
+  Description
+    Finds the path from root to leaf on a complete
+    tree of depth D which minimizes the sum of values
+    at the leaves.
+ 
+  See Also
+    CalcShiftStat, FWT_TI, BestBasis
+
+ BlockMedian -- Compute median of a polynomial over an interval
+  Usage
+    m = BlockMedian(P, interval)
+  Inputs
+    P         Polynomial, 
+              p(x) = P(1) x^(n-1) + P(2) x^(n-2) x + ... + P(n)
+    interval  2-vector, end points of a finite interval
+  Outputs
+    m         median(P|interval)
+    
+ BrowseImages -- Show Images with Point & Click Interface
+  Usage
+    BrowseImages
+
+  Description
+    A choices menu appears on the screen, you select your choice
+    and see an image display of the corresponding image.
+
+ BuildFBITree -- Build the 2-d Basis Tree for fingerprint compression
+  Usage
+    btree = BuildFBITree(D);
+  Inputs
+    D        maximum depth of splitting (>= 4)
+  Outputs
+    btree    basis-quadtree of the fingerprint basis
+
+  Description
+    The FBI uses a specific wavelet packet basis to compress
+    fingerprints.  BuildFBITree returns this basis.
+
+  References
+    IAFIS-IC-0110v2.  "WSQ Gray-Scale Fingerprint Image Compression
+    Specification.  Version 2," U.S. Dept. of Justice, Federal
+    Bureau of Investigation, 10 Feburary 1993.
+
+ BuildSkelMap -- Chain together Ridges of Wavelet Transform
+  Usage
+    [skellist,skelptr,skellen] = BuildSkelMap(maxmap)
+  Inputs
+    maxmap    matrix MMWT
+  Outputs
+    skellist  storage for list of chains
+    skelptr   vector of length nchain --pointers
+              to head of chain
+    skellen   vector of length nchain -- length of skellists
+
+  Description
+    A chain is a list of maxima at essentially the same position
+    across a range of scales. 
+    It is identified from the maxmap data structure output by WTMM
+    by finding a root at coarse scales and identifying the closest
+    maxima at the next finest scale.
+    NO PROVISION IS MADE FOR 'terminating' A CHAIN before the
+    finest scale is reached.
+
+    nchain = len(skellen) chains are found.
+    A chain data structure is a list of scale-location pairs
+    All chains are stored together in skellist.
+    The k-th list begins in skellist at skelptr(k)
+    The k-th list has length skellen(k)
+
+  See Also
+    CWT, WTMM, PlotSkelMap, ExtractRidge
+
+ BuildSkelMapFast -- Chain together Ridges of Wavelet Transform
+  Usage
+    [skellist,skelptr,skellen] = BuildSkelMapFast(maxmap)
+  Inputs
+    maxmap    matrix MMWT
+  Outputs
+    skellist  storage for list of chains
+    skelptr   vector of length nchain -- pointers to head of chain
+    skellen   vector of length nchain -- length of skellists
+
+  Description
+    A chain is a list of maxima at essentially the same position
+    across a range of scales. 
+    It is identified from the maxmap data structure output by WTMM
+    by finding a root at coarse scales and identifying the closest
+    maxima at the next finest scale.
+    NO PROVISION IS MADE FOR 'terminating' A CHAIN before the
+    finest scale is reached.
+
+    nchain = len(skellen) chains are found.
+    A chain data structure is a list of scale-location pairs
+    All chains are stored together in skellist.
+    The k-th list begins in skellist at skelptr(k)
+    The k-th list has length skellen(k)
+
+  See Also
+    CWT, WTMM, PlotSkelMap, BuildSkelMap, ExtractRidge
+
+ Calc2dPktTable -- Put Wavelet/Cosine Packet Coefficients into 2-d Table  
+  Usage
+    pkt2 = Calc2dPktTable(TFType,img,D,TFPar)
+  Inputs
+    TFType   string, 'CP' or 'WP' selecting type of time-frequency analysis
+    img      2-d image, n by n, n dyadic
+    D        maximum depth of splitting
+    TFPar    if 'WP', qmf 
+             if 'CP', bellname
+  Outputs
+    pkt2     packet table
+
+  Description
+    Creates a packet table of maximum depth D for the image specified by img.
+
+  See Also
+    Calc2dStatTree, WP2dTour, CP2dTour
+
+ Calc2dSQTree -- Put Packet Table Statistics into Quad Tree  
+  Usage
+    SQTree = Calc2dSQTree(pkt2,D,Entropy[,EntPar])
+  Inputs
+    pkt2       2-d packet table, depth log_2(n)
+    D          maximum depth of splitting
+    Entropy    type of entropy to record in tree: options are
+                  'Entropy' -- Coifman-Wickerhauser
+                  'Log'	 -- sum log |th_i|		
+                  'l^p'     -- sum |th_i|^p, 0 < p < 2, p = par
+                  'N(eps)'  -- #>= eps, eps = par
+                  'Risk'    -- sum min(th_i^2,eps^2), eps=par
+                  'Sum'     -- sum th_i
+                  'SURE'    -- SURE(Thresholding), thresh = par
+    EntPar     extra parameter, depends on type of entropy
+  Outputs
+    SQTree  quad tree filled entropy numbers. 
+            SQTree(qnode(d,bx,by)) contains entropy of quadlet(d,bx,by,n)
+ Calc2dStatTree -- Put Wavelet/Cosine Packet Statistics into Quad Tree
+  Usage
+    SQTree = Calc2dStatTree(TFType,img,D,TFPar,ent[,EntPar])
+  Inputs
+    TFType    string, 'CP' or 'WP' selecting type of time-
+              frequency analysis
+    img       2-d image, n by n, n dyadic
+    D         maximum depth of splitting
+    TFPar     if 'WP', qmf
+              if 'CP', bellname
+    ent       type of entropy to record in tree: options are
+                 'Entropy' -- Coifman-Wickerhauser
+                 'Log'     -- sum log(abs(th_i))
+                 'l^p'     -- sum |th_i|^p, 0 < p < 2, p = EntPar
+                 'N(eps)'  -- #>= eps, eps = EntPar
+                 'Risk'    -- sum min(th_i^2,eps^2), eps = EntPar
+                 'Sum'     -- sum th_i
+                 'SURE'    -- SURE(Thresholding), thresh = EntPar
+    EntPar    extra parameter, depends on type of entropy
+  Outputs
+    sqtree    quad tree filled entropy numbers.
+              SQTree(qnode(d,bx,by)) contains entropy of quadlet(d,bx,by,n)
+
+  Description
+    A packet table is indexed by depth, block within depth, and
+    coefficient within block.  Because 2d images require four
+    splits per parent block, WaveLab prefers to store just the
+    entropy measure for the coefficients in a particular block
+    rather than the coefficients themselves.  Calc2dStatTree
+    creates this statistics tree for the entropy measure chosen
+    by the user.
+
+  See Also
+    Best2dBasis, Plot2dBasisTree
+
+ Calc2dTreeHeight -- Measure the total height of a stat-quad-tree
+  Usage
+    heights = Calc2dTreeHeight(stree,D)
+  Inputs
+    stree     stat tree (e.g. generated by CalcStatTree)
+    D         maximum depth of search
+  Outputs
+    heights   Lengths of branches, assigning each branch
+              length equal to the entropy drop between parent & child
+
+  Description
+    This is a utility used by Plot2dBasisTree to set scale for plotting.
+    It is not intended for other use.
+
+  See Also
+        Calc2dStatTree, Plot2dBasisTree
+
+ CalcCWTNorms -- Calculate Norm at each Scale of CWT
+  Usage
+    norms = CalcCWTNorms(cw,p);
+  Inputs
+    cw      CWT array
+    p       optional, default = Inf
+  Outputs
+    norms   vector of p-norms scale by scale 
+  
+ CalcCWTPars -- Calculate Underlying Parameters of CWT Structure
+  Usage
+    [n,nscale,nvoice,noctave] = CalcCWTPars(sz)
+  Inputs
+    sz        size of CWT array
+  Outputs
+    n         signal length
+    nscale    number of scales
+    nvoice    number of voices
+    noctave   number of octaves
+  
+ CalcCWTScale -- Calculate Scales and TickMarks for CWT Display
+  Usage
+    [scales,xtick,ytick] = CalcCWTScale(sz);
+  Inputs
+    sz      size of CWT array
+  Outputs
+    scales  vector of scales in CWT
+    xtick   vector of positions
+    ytick   vector of log2(scales)
+  
+ CalcEntropy -- Calculate entropy number of array
+  Usage
+    Ent = CalcEntropy(object,ent[,par])
+  Inputs
+    object   1-d or 2-d object
+    ent      type of entropy to use: options are
+                'Entropy' -- Coifman-Wickerhauser
+                'Log'     -- sum log(|th_i|)
+                'l^p'     -- sum |th_i|^p, 0 < p < 2, p = par
+                'N(eps)'  -- #>= eps, eps = par
+                'Risk'    -- sum min(th_i^2,eps^2), eps=par
+                'Sum'     -- sum th_i
+                'SURE'    -- SURE(Thresholding), thresh = par
+    par      extra parameter, depends on type of entropy
+  Outputs
+    Ent      Entropy of object
+
+  Description
+    It is traditional to normalize the object to norm 1 before
+    calling this routine.  This routine does NO pre-scaling.
+
+  See Also
+    Calc2dStatTree
+    
+ CalcFracSpectrum -- Calculate Spectrum of Local Scaling Exponents
+  Usage
+    f = CalcFracSpectrum(z,q,alpha)
+  Inputs
+    tau       matrix 1 by nq of tau(q) ``Moment Gen Func''
+    q         optional list of exponents.  Default linspace(-2,5,61)'
+    alpha     optional list of dimensions. Default linspace(.1,.9,11)
+  Outputs
+    f         vector 1 by length(alpha) of fractal dimensions
+
+  Description
+    f(alpha) = min( alpha q - tau(q))
+
+  See Also
+    CWT, WTMM, CalcThermoPartition
+
+ CalcGenFracDimen -- Calculate Generalized Fractal dimensions
+  Usage
+    d = CalcGenFracDimen(z,q,scale)
+  Inputs
+    tau       matrix nexp by nscale of z(q,a) ``Thermo Partition Func''
+    q         optional list of exponents default linspace(-2,5,61)
+    scale     optional list of scales default 1
+  Outputs
+    d         matrix nexp by nscale of d(q,a)
+
+  Description
+    d(q)   = log(tau(q))/(q-1)'                   (if scale =1)
+    d(q,a) = log(tau(q,a)) / ((q-1)' log(scale)   (if length(scale) > 1)
+
+  See Also
+    CWT, WTMM
+
+ CalcMomentGenFun -- Calculate Moment Generating Function
+  Usage
+    tau = CalcMomentGenFun(z,a,loscale,hiscale)
+  Inputs
+    z         matrix nexp by nscale of z(q,a) ``Thermo Partition Func''
+    a         list of scales 
+    loscale   optional min scale to fit line by
+    hiscale   optional max scale to fit line by 
+  Outputs
+    tau       vector 1 by nscale of moments
+
+  Description
+    tau(q) = Slope [ log(z(q,a))  versus log(a) ]
+
+  See Also
+    CalcThermoPartition
+
+ CalcStatPath -- build path-tree filled with entropy numbers
+  Usage
+    stree = CalcShiftStat(TIWT,ent[,par])
+  Inputs
+    TIWT    TI transform table from FWT_TI
+    ent     type of entropy to use: options are
+               'Entropy' -- Coifman-Wickerhauser
+               'Log'     -- sum log(abs(th_i))
+               'l^p'     -- sum th_i^p, 0 < p < 2, p = par
+               'N(eps)'  -- #>= eps, eps = par
+               'Risk'    -- sum min(th_i^2,eps^2), eps=par
+               'SURE'    -- SURE(Thresholding), thresh = par
+    par     extra parameter, depends on type of entropy
+  Outputs
+    stree   stat tree of entropy numbers. 
+            tree(node(d,b)) contains entropy of packet(d,b,n)
+
+  Description
+    A packet table is indexed by depth, block within depth, and
+    coefficient within block.  A stat tree summarizes the
+    coefficients within a particular block at a given depth
+    with an entropy measure based on the coefficients.
+
+    This algorithm is exactly like CalcStatTree, but takes into account
+    the different storage organization of the Translation-Invariant
+    transform table.
+ 
+  See Also
+    BestShift, FWT_TI
+    
+ CalcStatTree -- Build tree with entropy numbers
+  Usage
+    stree = CalcStatTree(pkt,ent[,par])
+  Inputs
+     pkt     packet table [wavelet or cosine packet] (n x L)
+     ent     type of entropy to use: options are
+                'Entropy' -- Coifman-Wickerhauser
+                'Log'     -- sum log(abs(th_i))
+                'l^p'     -- sum |th_i|^p, 0 < p < 2, p = par
+                'N(eps)'  -- #>= eps, eps = par
+                'Risk'    -- sum min(th_i^2,eps^2), eps=par
+                'Sum'     -- sum th_i
+                'SURE'    -- SURE(Thresholding), thresh = par
+     par     extra parameter, depends on type of entropy
+  Outputs
+     stree   stat tree of entropy numbers. 
+             tree(node(d,b)) contains entropy of packet(d,b,n)
+
+  Description
+    A packet table is indexed by depth, block within depth, and
+    coefficient within block.  A stat tree summarizes the
+    coefficients within a particular block at a given depth
+    with an entropy measure based on the coefficients.
+
+   See Also
+      BestBasis, PlotBasisTree
+    
+ CalcThermoPartition -- Build Thermodynamic Partition Function
+  Usage
+    z = CalcThermoPartition(cw,mm,q)
+  Inputs
+    cw        matrix output by CWT
+    mm        maxmap output by MMWT
+    q         optional list of exponents default linspace(-2,5,61)
+  Outputs
+    z         matrix nexp by nscale of z(q,a)
+
+  Description
+    z(q,a) = sum_i( |CWT(a,b(i))|^q ),  where b = (b(i)) is a list
+    of wavelet transform maxima  
+
+  See Also
+    CWT, WTMM
+
+ CalcTreeHeight -- Measure the total height of a stat-tree
+  Usage
+    [maxheight, cost] = CalcTreeHeight(stree,D)
+  Inputs
+    stree       stat tree (e.g. generated by CalcStatTree)
+    D           maximum depth of search
+  Outputs
+    maxheight   Height of the tree, assigning to each branch a length
+                equal to the entropy drop between parent and child
+    cost        Tree of entropy drops associated with various splits
+
+  Description
+    This is a utility used by PlotBasisTree to set scale for plotting
+    It is not intended for other use.
+
+  See Also
+    CalcStatTree, PlotBasisTree
+
+ CalcWPLocation -- Calculate location of wavelet packet entry
+  Usage
+    CalcWPLocation(d,b,k,qmf,n)
+  Inputs
+    d          depth index
+    b          block index
+    k          coef index
+    qmf        qmf filter
+    n          signal length
+  Outputs
+    pos        position in wp data structure
+ 
+ CDJVDyadDown -- Downsampling with Boundary Correction
+  Usage
+    blo = CDJVDyadDown(bhi,F,LEF,REF)
+  Inputs
+    bhi  1-d signal, at fine scale
+    F    filter
+    LEF  left edge filter bank
+    REF  right edge filter bank
+  Outputs
+    blo  1-d signal, at coarse scale
+
+  Description
+    CDJV have developed an algorithm for wavelets on the interval
+    which preserves the orthogonality, vanishing moments, smoothness
+    and compact support of Daubechies wavelets on the line.
+
+    The CDJV algorithm for wavelets on the interval involves
+    filtering combined with upsampling  and downsampling, just like
+    the algorithm on the line and circle. However, the filtering
+    is not convolutional at the edges; instead special edge-filter
+    matrices are applied. CDJVDyadDown implements the downsampling 
+    with edge-adjustment.
+
+  See Also
+    MakeCDJVFilter, FWT_CDJV, IWT_CDJV, CDJVDyadUp
+
+  References
+    CDJV -- Cohen, Daubechies, Jawerth and Vial, 1992.
+
+ CDJVDyadUp -- UpSampling with CDJV Boundary Correction
+  Usage
+    bhi = CDJVDyadUp(blo,F,LEF,REF)
+  Inputs
+    bhi  1-d signal, at coarse scale
+    F    filter
+    LEF  left edge filter bank
+    REF  right edge filter bank
+  Outputs
+    blo  1-d signal, at coarse scale
+
+  Description
+    CDJV have developed an algorithm for wavelets on the interval
+    which preserves the orthogonality, vanishing moments, smoothness
+    and compact support of Daubechies wavelets on the line.
+
+    The algorithm for wavelets on the interval of CDJV involves
+    filtering combined with upsampling  and downsampling, just like
+    the algorithm on the line and circle. However, the filtering
+    is not convolutional at the edges; instead special edge-filter
+    matrices are applied. CDJVDyadUp implements the upsampling with
+    edge-adjustment.
+
+  See Also
+    MakeCDJVFilter, IWT_CDJV, FWT_CDJV, CDJVDyadDown
+
+  References
+    CDJV -- Cohen, Daubechies, Jawerth and Vial, 1992.
+
+ CoarseMeyerCoeff -- Resume coefficients, coarse level
+  Usage
+    beta = CoarseMeyerCoeff(fhat,C,n,deg)
+  Inputs
+    fhat     FFT of signal vector, dyadic length
+    C        coarse resolution level
+    n        length of signal vector (must be of the form 2^J)
+    deg      degree of Meyer window
+  Outputs	
+    beta     Father Meyer wavelet coefficients, level C
+             (length(alpha) = 2^C)
+
+  See Also
+    FoldMeyer, QuasiDCT, QuasiDST, CombineCoeff
+
+ CoarseMeyerProj -- Invert Meyer Transform, coarse level C
+  Usage
+    cpjf = CoarseMeyerProj(beta,C,n,deg)
+  Inputs
+    beta     Father Meyer Coefficients, dyadic length 2^C.
+    C        coarse resolution level
+    n        length of signal vector (must be of the form 2^J)
+    deg      degree of Meyer window
+  Outputs	
+    cpjf     projection of signal onto approximation space V_C
+             (length(cpjf) = n)
+
+  See Also
+    UnfoldMeyer, QuasiDCT, QuasiDST, SeparateCoeff, ExtendProj
+
+ CohenDist -- Choi William Distribution
+  Usage
+    cwd = CohenDist(sig,sigma)
+  Inputs
+    sig     1-d signal
+    sigma   Choi William distribution parameter
+  Outputs
+    cwd    complex-valued matrix representing the Choi & William
+           distribution of periodic signal with rows corresponding
+           to frequencies and columns corresponding to times.
+
+  Side Effects
+    Image Plot of the Choi & William distribution
+
+  See Also
+    Interpol2
+
+  References
+    Mallat's book, sections 4.5.3 and 4.5.4
+
+ CohWave - Denoising of signal contaminated with another signal using coherent
+ structures algorithm.
+  CohWave -- Denoising of 1-d signal with wavelet thresholding.
+  Usage 
+    out=CohWave(Noisy,L,qmf)
+  Inputs
+    Noisy	1-d Noisy signal, length(Noisy)= 2^J.
+    L      	Low-Frequency cutoff for shrinkage (e.g. L=4)
+           	Should have L << J!
+           	Optional, Default = 3.
+    qmf    	Quadrature Mirror Filter for Wavelet Transform
+           	Optional, Default = Symmlet 4.
+  Outputs 
+    out     	Estimate, obtained by applying thresholding on
+          	wavelet coefficients.
+ CombineCoeff -- Combine local trig. coeff's into wavelet coeff's
+  Usage
+    wcoefs = CombineCoeff(rtrigcoefs,itrigcoefs,window,n)
+  Inputs
+    rtrigcoefs   trigonometric coefficients corresponding to
+                        projection of real part of \hat f
+    itrigcoefs   trigonometric coefficients corresponding to
+                        projection of imag part of \hat f
+    window       string selecting window for projection
+                 'm' -> mother, 'f' -> father, 't' -> truncated mother
+    n            length of original signal f
+  Outputs
+    wcoefs       wavelet coefficients for a given level
+
+  See Also
+    CoarseMeyerCoeff, DetailMeyerCoeff, FineMeyerCoeff
+
+ CompareStdBases -- Calculate entropy of some standard bases
+  Usage
+    bestlev = CompareStdBases(stree,D)
+  Inputs
+    stree      stat tree (e.g. returned by CalcStatTree)
+    D          maximum level to search
+  Outputs
+    bestlev    best single level of basis
+
+  Side Effects
+    Prints out statistics of all single-level bases of packet
+    table, prints out statistics of wavelet basis.
+
+  See Also
+    ImagePhaseVarious, PlotPhaseVarious
+
+ ContourMultiRes -- Multi-Resolution Mesh Display of 1-d Wavelet Transform
+  Usage
+    ContourMultiRes(wc,L,scal,qmf)
+  Inputs
+    wc    1-d wavelet transform
+    L     level of coarsest scale
+    scal  scale factor [0 ==> autoscale]
+    qmf   quadrature mirror filter used to make wc
+
+  Description
+    A depiction of the multi-resolution decomposition
+    of signal, as in S. Mallat.
+
+  See Also
+    PlotWaveCoeff, FWT_PO, IWT_PO, MakeONFilter
+
+ CP2dTour -- Cosine Packet Analysis in Adaptively Chosen Basis
+  Usage
+    [bb,stats,coef] = CP2dTour(img,MaxDeep,titlestr)
+  Inputs
+    img        2-d image; size n by n, n dyadic
+    MaxDeep    integer; limit on max depth of tree in best basis search
+    titlestr   string; name of signal
+  Outputs
+    bb         basis quadtree of best basis
+    stats      stat quadtree of best basis
+    coef       coefficients in best basis
+
+  Description
+    Perform an adaptive cosine packet analysis on the given image,
+    selecting the best basis and then plotting the CP coefficients
+    for this basis along with the image overlaid by its 2-d partition.
+
+ CP2dTour -- Cosine Packet Analysis in Adaptively Chosen Basis
+  Usage
+    [bb,stats,coef] = CP2dTour(img,MaxDeep,titlestr)
+  Inputs
+    img        2-d image; size n by n, n dyadic
+    MaxDeep    integer; limit on max depth of tree in best basis search
+    titlestr   string; name of signal
+  Outputs
+    bb         basis quadtree of best basis
+    stats      stat quadtree of best basis
+    coef       coefficients in best basis
+
+  Description
+    Perform an adaptive cosine packet analysis on the given image,
+    selecting the best basis and then plotting the CP coefficients
+    for this basis along with the image overlaid by its 2-d partition.
+
+ CPAnalysis -- Dyadic table of all Cosine Packet Coefficients
+  Usage
+    cp = CPAnalysis(x,D,bell) 
+  Inputs
+    x        1-d signal:  length(x)=2^J
+    D        depth of finest time splitting
+    bell     name of bell to use, defaults to 'Sine'
+  Outputs
+    cp       1-d packet table (n by D+1).
+  Description
+    The table cp contains coefficients of all Local Cosine Decompositions.
+    The Local Cosine Transform for time interval [b/2^d,(b+1)/2^d]
+    is stored in cp(packet(d,b,n),d+1).
+ See Also
+   CPTour, CPSynthesis, fold, unfold, dct_iv, packet
+
+ CPAtomicSynthesis -- Generate signal from list of CP-components
+  Usage
+    sig = CPAtomicSynthesis(atoms,cp,bell)
+ Inputs
+    atoms    list of 1-d time-frequency atoms in CP space
+    cp       cosine packet table (from which atoms are taken)
+    bell     bellname (e.g. 'Sine') 
+ Outputs
+    sig      the superposition of the CP-components
+
+ See Also
+      CPPursuit, CPImpulse
+
+ The basis pursuit algorithm in a cosine packet dictionnary is
+ not yet implemented in Wavelab. It is implemented in the LastWave
+ software, which is available on the Internet at
+ http://www.cmap.polytechnique.fr/users/www.bacry
+ CPDeNoise -- De-Noising in an adaptively chosen CP basis
+  Usage
+    [clean,bb,st] = CPDeNoise(x,D,bell)
+  Inputs
+    x       1-d signal to be de-noised.
+    D       maximum allowed depth of basis tree
+    bell    bell for time splitting
+  Outputs
+    clean   cleaned signal
+    bb      basis tree naming basis in which de-noising was done
+    st      stat tree: statistics driving basis search
+
+  Description
+    1. Assumes noise level == 1
+    2. Uses Stein Unbiased Estimate of risk to evaluate basis
+    3. Uses Coifman-Wickerhauser Best Basis algorithm to select
+       best basis
+
+ See Also
+    WaveShrink, WPDeNoise
+
+ CPImpulse -- CPAnalysis of an individual Cosine Packet
+  Usage
+    dcp = CPImpulse(cp,d,b,k,bell)
+  Inputs
+    cp      packet table -- ignored [except for size]
+    d,b,k   1-d packet-index
+    bell    bellname (e.g. 'Sine') 
+  Outputs
+    dcp     packet table -- complete cosine packet analysis of
+            cosine packet (d,b,k)
+
+  See Also
+    CPAtomicSynthesis, CPPursuit
+
+ CPMPursuitTour -- Cosine Packet atomic decomposition
+  Usage
+    [cp, btree] = CPMPursuitTour(Format,x,D,ball [,natom,title])
+  Inputs  
+    Format   string: 'S' for sequential display of four figures
+                     'P' for four-panel display  
+    x        1-d signal to analyze by Wavelet Packets
+    D        fineness of time domain splitting
+    bell     bellname (e.g. 'Sine')
+    natom    maximum number of atoms to extract by Matching Pursuit
+    title    name of signal
+  Outputs 
+    atomic   atom list,  cosine packet dictionary (see CPPursuit)
+    resid    residual
+
+  Description
+    The format string controls whether all four displays
+    are drawn as subplots in one figure, or whether they are 
+    drawn one-after-the-other on the same figure
+
+    The global PREFERIMAGEGRAPHICS controls whether the phase
+    portrait is done using ``image'' graphics (if =1) or ``plot''
+    graphics (if =0).
+
+  Side Effects
+    plot of Cosine Packet Synthesis Table
+    plot of Cosine Packet Residuals Table
+    plot of Compression Numbers
+    plot of phase plane
+
+  See Also
+    WPAnalysis, BestBasis, PlotPhasePlane, PlotBasisTree
+
+ CPPursuit -- Matching Pursuit with Cosine Packet Dictionary
+  Usage
+    atomic = CPPursuit(x,D,bell,natom,frac,show)
+  Inputs
+    x        1-d signal to be decomposed
+    natom    maximum number of atoms desired
+    frac     min fraction total signal energy to enter
+    D,bell   usual Cosine Packets parameters (Depth, name of bell)
+    show     plot intermediate results? [0=no,1=yes]
+  Outputs
+    atomic   parameters of atomic decomposition
+
+  See Also
+    PlotAtomicPhasePlane, CPImpulse, CPAnalysis
+
+ CPPursuitBF -- Matching Pursuit using Cosine Packet Dictionary with backfitting
+  Usage
+    atomic = CPPursuitBF(x,D,bell,natom,frac,show)
+  Inputs
+    x        1-d signal to be decomposed
+    natom    maximum number of atoms desired
+    frac     min fraction total signal energy to enter
+    D,bell   usual Cosine Packets parameters (Depth, name of bell)
+    show     plot intermediate results? 0=no, 1=yes
+  Outputs
+    atomic   parameters of atomic decomposition [a l b k]
+    normres  norm of residules from each step
+
+  Side Effects
+    If show=1, intermediate results are plotted
+
+  See Also
+    PlotAtomicPhasePlane, CPImpulse, CPAnalysis, CPPursuit
+
+ CPPursuitTour -- Cosine Packet atomic decomposition
+  Usage
+    [cp, btree] = CPPursuitTour(Format,x,D,ball [,natom,title])
+  Inputs  
+    Format   string: 'S' for sequential display of four figures
+                     'P' for four-panel display  
+    x        1-d signal to analyze by Wavelet Packets
+    D        fineness of time domain splitting
+    bell     bellname (e.g. 'Sine')
+    natom    maximum number of atoms to extract by Matching Pursuit
+    title    name of signal
+  Outputs 
+    atomic   atom list,  cosine packet dictionary (see CPPursuit)
+    resid    residual
+
+  Description
+    The format string controls whether all four displays
+    are drawn as subplots in one figure, or whether they are 
+    drawn one-after-the-other on the same figure
+
+    The global PREFERIMAGEGRAPHICS controls whether the phase
+    portrait is done using ``image'' graphics (if =1) or ``plot''
+    graphics (if =0).
+
+  Side Effects
+    plot of Cosine Packet Synthesis Table
+    plot of Cosine Packet Residuals Table
+    plot of Compression Numbers
+    plot of phase plane
+
+  See Also
+    WPAnalysis, BestBasis, PlotPhasePlane, PlotBasisTree
+
+ CPSynthesis -- Synthesize signal from cosine packet table
+  Usage
+    x = CPSynthesis(btree,cp,bell)
+  Inputs
+    btree    basis tree indicating basis to work in
+    cp       cosine packet table
+    bell     name of orthonormal bell, defaults to 'Sine'
+  Outputs
+    x        signal whose cosine packet coeff's in
+             basis btree come from cp
+ Examples
+   [n,D] = dyadlength(signal);
+   cp = CPAnalysis(signal,D);
+   stree = CalcStatTree(cp,'Entropy');
+   [btree,vtree] = BestBasis(stree,D);
+   signal2 = CPSynthesis(btree,cp); % signal == signal2
+   
+  See Also
+      CPAnalysis, CPTour, MakeONBell 
+
+ CPTour -- Cosine packet decomposition & Best Basis analysis
+  Usage
+    [cp, btree] = CPTour(Format,x,D,title)
+  Inputs
+    Format   string: 'S' for sequential, 'P' for panel  
+    x        1-d signal to analyze by Cosine Packets
+    D        maximum depth of dyadic subdivision of time domain
+    title    name of signal [optional]
+  Outputs 
+    cp       packet table (see CPAnalysis)
+    btree    basis tree of best time-frequency basis
+
+  Description
+    The format string controls whether all four displays
+    are drawn as subplots in one figure, or whether they are 
+    drawn one-after-the-other on the same figure.
+
+    The global PREFERIMAGEGRAPHICS controls whether the phase
+    portrait is done using ``image'' graphics (if ==1 ) or ``plot''
+    graphics (if == 0).
+
+  Side Effects
+    plot of Cosine packet Table
+    tree plot, best basis
+    phase plot, best basis
+    printout, entropy, best basis
+
+  See Also
+    CPAnalysis, BestBasis, PlotPhasePlane, PlotBasisTree
+
+ CutDyad -- Truncate signal to Dyadic length
+  Usage
+    dyad_sig = CutDyad(sig)
+  Inputs
+    sig        a row or column vector
+  Outputs
+    dyad_sig   a vector of dyadic length
+               with contents taken from sig
+
+  See Also
+    PadDyad
+
+ CWT -- Continuous Wavelet Transform
+  Usage
+    cwt = CWT(x,nvoice,wavelet,oct,scale)
+  Inputs
+    x        signal, dyadic length n=2^J, real-valued
+    nvoice   number of voices/octave
+    wavelet  string 'Gauss', 'DerGauss','Sombrero', 'Morlet'
+    octave   Default=2
+    scale    Default=4
+  Outputs
+    cwt      matrix n by nscale where
+             nscale = nvoice .* noctave
+
+  Description
+    
+
+ dct2_iv -- 2-dimensional discrete cosine transform (type IV)
+  Usage
+    c = dct2_iv(x)
+  Inputs
+    x     2-d image (n by n array, n dyadic)
+  Outputs
+    c     2-d cosine transform
+
+  Description
+    A two-dimensional DCT is computed for the
+    array x. To reconstruct, use the same function:
+          x = dct2_iv(c)
+
+  See Also
+    dct_iv
+
+ dct_ii -- Discrete Cosine Transform of Type II
+  Usage
+    c = dct_ii(x)
+  Inputs
+    x     signal of dyadic length
+  Outputs
+    c     discrete cosine transform, type II, of x
+
+  Description
+    The form c = dct_ii(x) computes c defined by
+        c_m = sqrt(2/N) * sum_n x(n) k_m cos( pi * m (2n+1) / 2N )
+    where 
+        0 <= m,n <= N-1,  N = length(x) = length(c)
+    and k_m = [ 1           if 1 <= m <= N-1
+              [ 1/sqrt(2)   if m = 0 
+
+   The dct_ii is inverted by the dct_iii.
+
+  See Also
+    DetailMeyerCoeff, FineMeyerCoeff
+
+ dct_iii -- Discrete Cosine Transform of Type III
+  Usage
+    c = dct_iii(x)
+ Inputs
+    x    signal of dyadic length
+ Outputs
+    c    discrete cosine transform, type III, of x
+
+ Description
+    The form c = dct_iii(x) computes c defined by
+        c_n = sqrt(2/N) * sum_m x(m) k_m cos( pi * m (2n+1) / 2N )
+    where 
+        0 <= m,n <= N-1,  N = length(x) = length(c)
+    and k_m = [ 1           if 1 <= m <= N-1
+              [ 1/sqrt(2)   if m = 0
+
+    The dct_iii is inverted by the dct_ii.
+
+ See Also
+    FineMeyerCoeff, DetailMeyerCoeff
+
+ dct_iv -- Type (IV) Discrete Cosine Xform
+  Usage 
+    c = dct_iv(x)
+  Inputs
+    x     1-d signal, length(x) = 2^J
+  Outputs
+    c     1-d cosine transform, length(x)=2^J
+
+  Description
+    The form c = dct_iv(x) computes c defined by
+         c_m = sqrt(2/N) * sum_n x(n) cos( pi * (m-.5) * (n-.5) / N )
+     where 
+         1 <= m,n <= N,  N = length(x) = length(c)
+
+    To reconstruct, use the same function:
+         x = dct_iv(c)
+
+  See Also
+    CPAnalysis, CPSynthesis
+
+ DDDyadDown -- Deslauriers-Dubuc Interpolating DownSampling Operator
+  Usage
+    [beta,alfa] = DDDyadDown(afine,D,F,LEF,REF)
+  Inputs
+    afine   fine-scale samples
+    D       degree of polynomial fit in  DD interpolation
+    F       filter implementing DD-interpolation
+    LEF     Left edge filter for DD-interpolation
+    REF     Right edge filter for DD-interpolation
+  Outputs
+    beta    coarse-scale samples
+    alfa    detail corrections
+
+  Description
+    Splits information afine on fine scale samples into coarse
+    scale samples beta and gen. midpoint deflections alfa.
+
+  See Also
+    IWT_DD, DDRefine, MakeDDFilter
+ 
+ DDDyadUp -- Interpolating UpSampling Operator
+  Usage
+    afine = DDDyadUp(beta,alfa,D,F,LEF,REF)
+  Inputs
+    beta    coarse-scale samples
+    alfa    midpoint deflections
+    D       degree of polynomial fit in interpolation
+    F       filter implementing DD-interpolation
+    LEF     left edge filter of DD-interpolation
+    REF     right edge filter of DD-interpolation
+  Outputs
+    afine   fine-scale samples
+
+  Description
+    Implements the Coarse-to-Fine phase of the interpolating
+    Wavelet Transform. Takes coarse scale samples and midpoint
+    corrections and synthesizes fine-scale samples.
+
+  See Also
+    IWT_DD, DDRefine, MakeDDFilter
+ 
+ DDRefine -- Deslauriers-Dubuc Refinement Scheme
+  Usage
+    fine = DDRefine(coarse,D,Filter,LEF,REF)
+  Inputs
+    coarse    1-d signal at a coarse scale: length(coarse)=n
+    D         D degree of polynomials used for interpolation
+    Filter    interpolating filter from MakeDDFilter(D)
+    LEF       Left Edge Boundary filter from MakeDDBdryFilter(D)
+    REF       Right Edge Boundary filter from MakeDDBdryFilter(D)
+  Outputs
+    fine      1-d signal at a fine scale: length(fine) = 2*n
+
+  Description
+    The Deslauriers-Dubuc Refinement scheme (symmetric
+    Lagrangian Interpolation of order D) is used to refine
+    data on a grid of n points to data on a grid of 2n points.
+    The odd samples 2*i-1 at the fine scale agree with samples i
+    at the coarse scale; the even samples 2*i are obtained by 
+    polynomial interpolation of the coarse samples near i.
+
+  See Also
+    DDDyadUp, DDDyadDown, FWT_DD, IWT_DD
+
+ DetailMeyerCoeff -- Detail coefficients, level j, 3 <= j <= J-2
+  Usage
+    alpha = DetailMeyerCoeff(fhat,j,n,deg)
+  Inputs
+    fhat     FFT of signal vector, dyadic length
+    j        resolution level
+    n        length of signal vector (must be of the form 2^J)
+    deg      degree of Meyer window
+  Outputs	
+    alpha    Meyer wavelet coefficients, level j
+             (length(alpha) = 2^j)
+
+  See Also
+    FoldMeyer, dst_iii, dct_iii, CombineCoeff
+
+ DetailMeyerProj -- Invert Meyer Transform, level j, 3 <= j <= J-2
+  Usage
+    dpjf = DetailMeyerProj(alpha,j,n,deg)
+  Inputs
+    alpha    Meyer Wavelet Coefficients, dyadic length 2^j
+    j        resolution level
+    n        length of signal vector (must be of the form 2^J)
+    deg      degree of Meyer window
+  Outputs	
+    dpjf     projection of signal onto approximation space V_C
+             (length(cpjf) = n)
+
+  See Also
+    UnfoldMeyer, dct_ii, dst_ii, SeparateCoeff, ExtendProj
+
+ DisplayDWT -- Display Dyadic Wavelet Transform by Scale 
+  Usage
+    DisplayDWT(dwt);
+  Inputs
+    dwt  	dyadic wavelet transform of signal, n = length(signal),
+               a table of log2(n)-L scales by n elements
+    Opt	options, 1 = only dyadic wavelet transformation (default)
+			 2 = top figure is scaling function
+			 3 = top plot is original signal 
+			 4 = top plot is original signal
+			     and bottom plot is scaling function
+    signal	Signal before dyadic wavelet transformation
+  Side Effects
+    Generate a number of scales by one plot;
+  Description
+    1. Ignore first column of dwt, which is corresponding to scaling function;
+  Algorithm
+     
+  Examples
+    dyadlength = 10;
+    N = 2.^dyadlength;
+    SignalType = 'Bumps';
+    Signal = MakeSignal(SignalType,N);
+    dwt = DWT_PO(Signal);
+    DisplayDWT(dwt)
+    Opt = 2;
+    DisplayDWT(dwt,Opt)
+    Opt = 3;
+    DisplayDWT(dwt,Opt,Signal)
+  See Also
+    PlotColumns.m  
+  References
+     Stephane Mallat and Sifen Zhong, "Characterization of Signal from 
+     	Multiscale Edges";
+
+ DisplayDWT -- Display Dyadic Wavelet Transform by Scale 
+  Usage
+    DisplayDWT(dwt);
+  Inputs
+    dwt  	dyadic wavelet transform of signal, n = length(signal),
+               a table of log2(n)-L scales by n elements
+    Opt	options, 1 = only dyadic wavelet transformation (default)
+			 2 = top figure is scaling function
+			 3 = top plot is original signal 
+    signal	Signal before dyadic wavelet transformation
+  Side Effects
+    Generate a number of scales by one plot;
+  Description
+    1. Ignore first column of dwt, which is corresponding to scaling function;
+  Algorithm
+     
+  Examples
+    dyadlength = 10;
+    N = 2.^dyadlength;
+    SignalType = 'Bumps';
+    Signal = MakeSignal(SignalType,N);
+    dwt = DWT_PO(Signal);
+    DisplayDWT(dwt)
+    Opt = 2;
+    DisplayDWT(dwt,Opt)
+    Opt = 3;
+    DisplayDWT(dwt,Opt,Signal)
+  See Also
+    PlotColumns.m  
+  References
+     Stephane Mallat and Sifen Zhong, "Characterization of Signal from 
+     	Multiscale Edges";
+
+ DisplayMultiRes -- Multi-Resolution Mesh Display of 1-d Wavelet Transform
+  Usage
+    DisplayMultiRes(wc,L,scal,qmf,type)
+  Inputs
+    wc    1-d wavelet transform
+    L     level of coarsest scale
+    scal  scale factor [0 ==> autoscale]
+    qmf   quadrature mirror filter used to make wc
+    type  'Mesh','Contour','Image'
+
+  Side Effects
+    A depiction of the multi-resolution decomposition
+    of signal, as in S. Mallat.
+
+  See Also
+    PlotWaveCoeff, FWT_PO, IWT_PO, MakeONFilter
+
+ DisplayWaveCoeff -- Display wavelet coefficients
+  Usage
+    DisplayWaveCoeff(wc,L,scal,type[,num_use])
+  Inputs
+    wc        1-d wavelet transform
+    L         level of coarsest scale
+    scal      scale factor [0 ==> autoscale]
+    type      'Mesh','Contour','Image'
+    num_use   for Contour only, number of contours to plot (def. 8)
+
+  Side Effects
+    A display of wavelet coefficients (coarsest level NOT
+    included) by level and position.
+
+  See Also
+    PlotMultiRes, FWT_PO, IWT_PO, PlotSpikes
+
+ DownDyad_SBS -- Symmetric Downsampling operator
+  Usage
+    [beta,alpha] = DownDyad_SBS(x,qmf,dqmf)
+  Inputs
+    x     1-d signal at fine scale
+    qmf   quadrature mirror filter
+    dqmf  dual quadrature mirror filter
+  Outputs
+    beta  coarse coefficients
+    alpha fine coefficients
+  See Also
+    FWT_SBS
+ 
+ DownDyadHi -- Hi-Pass Downsampling operator (periodized)
+  Usage
+    d = DownDyadHi(x,f)
+  Inputs
+    x    1-d signal at fine scale
+    f    filter
+  Outputs
+    y    1-d signal at coarse scale
+
+  See Also
+    DownDyadLo, UpDyadHi, UpDyadLo, FWT_PO, iconv
+
+ DownDyadHi_PBS -- Hi-Pass Downsampling operator (periodized,symmetric)
+  Usage
+    d = DownDyadHi_PBS(x,sqmf)
+  Inputs
+    x    1-d signal at fine scale
+    sqmf symmetric filter
+  Outputs
+    y    1-d signal at coarse scale
+
+  See Also
+    DownDyadLo_PBS, UpDyadHi_PBS, UpDyadLo_PBS, FWT_PBS, symm_iconv
+
+ DownDyadLo -- Lo-Pass Downsampling operator (periodized)
+  Usage
+    d = DownDyadLo(x,f)
+  Inputs
+    x    1-d signal at fine scale
+    f    filter
+  Outputs
+    y    1-d signal at coarse scale
+
+  See Also
+    DownDyadHi, UpDyadHi, UpDyadLo, FWT_PO, aconv
+
+ DownDyadLo_PBS -- Lo-Pass Downsampling operator (periodized,symmetric)
+  Usage
+    d = DownDyadLo_PBS(x,sf)
+  Inputs
+    x    1-d signal at fine scale
+    sf   symmetric filter
+  Outputs
+    y    1-d signal at coarse scale
+
+  See Also
+    DownDyadHi_PBS, UpDyadHi_PBS, UpDyadLo_PBS, FWT_PBSi, symm_aconv
+
+ DownQuad -- Split 2-d image into 4 subbands
+  Usage
+    q = DownQuad(Quad,qmf,xbit,ybit)
+  Inputs
+    Quad   Quadlet to be split into four subbands 
+    qmf    orthogonal quadrature mirror filter  
+    xbit   x-position of quadlet in 2-d freq plane
+    ybit   y-position of quadlet in 2-d freq plane
+  Outputs
+    q      quadlet after splitting
+
+  Description
+    A 2-d signal is split into four subbands: (Lo_x,Lo_y),
+    (Lo_x,Hi_y), (Hi_x,Lo_y), (Hi_x,Hi_y).
+
+    This routine is called by other, higher-level WaveLab functions
+    and may not be useful for many users.
+
+  See Also
+    FPT2_WP, UpQuad
+
+ DrawHeisenberg -- Draw Heisenberg rectangle
+  Usage
+    DrawHeisenberg(x0,x1,y0,y1,v)
+  Inputs
+    x0,x1,y0,y1    coordinates of rectangle
+    v              value determining how rectangle is plotted
+                   v < 3 invisible
+                   v > 3 visible
+                   3 < v <= 5   '.'
+                   5 < v <= 10  'o'
+                   10 < v       'x'
+
+  Description
+    This is a utility employed by PlotPhasePlane.
+
+  See Also
+    PlotPhasePlane, CPTour, WPTour
+
+ dst_i -- Discrete Sine Transform, Type I
+  Usage 
+    s = dst_i(x)  Forward DST-I
+    x = dst_i(s)  Inverse DST-I
+  Inputs
+    x     1-d signal, length(x) = 2^J-1
+  Outputs
+    s     1-d sine transform, length(s)=2^J-1
+
+  Description
+    The form s = dst_i(x) computes s defined by
+        s_m = sqrt(2/N) * sum_n x(n) sin( pi * m*n / N )
+    where 
+        1 <= m,n <= N-1,  N = length(x)+1 = length(c)+1
+
+    The transform is self-inverting.
+
+  See Also
+    Meyer Inversion Code
+
+ dst_ii -- Discrete Sine Transform of Type II
+  Usage
+    s = dst_ii(x)
+  Inputs
+    x     signal of dyadic length
+  Outputs
+    s     discrete cosine transform, type II, of x
+
+  Description
+    The form s = dst_ii(x) computes s defined by
+        s_m = sqrt(2/N) * sum_n k_m x(n) sin( pi * m*(2n-1) / 2N )
+    where 
+        1 <= m,n <= N,  N = length(x) = length(c)
+    and k_m = [ 1           if 1 <= m <= N-1
+              [ 1/sqrt(2)   if m = N
+
+    The dst_ii is inverted by the dst_iii.
+
+  See Also
+    DetailMeyerProj, FineMeyerProj
+
+ dst_iii -- Discrete Sine Transform of Type III
+  Usage
+    s = dst_iii(x)
+  Inputs
+    x     signal of dyadic length
+  Outputs
+    s     discrete cosine transform, type II, of x
+
+  Description
+    The form s = dst_iii(x) computes s defined by
+        s_m = sqrt(2/N) * sum_m k_m x(m) sin( pi * m*(2n-1) / 2N )
+    where 
+        1 <= m,n <= N,  N = length(x) = length(c)
+    and k_m = [ 1           if 1 <= m <= N-1
+              [ 1/sqrt(2)   if m = N
+
+    The dst_ii is inverted by the dst_iii.
+
+  See Also
+    DetailMeyerCoeff, FineMeyerCoeff
+
+ dyad -- Index entire j-th dyad of 1-d wavelet xform
+  Usage
+    ix = dyad(j);
+  Inputs
+    j     integer
+  Outputs
+    ix    list of all indices of wavelet coeffts at j-th level
+
+ dyad2ix -- Convert wavelet indexing into linear indexing
+  Usage
+    ix = dyad2ix(j,k)
+  Inputs
+     j    Resolution Level. j >= 0.
+     k    Spatial Position. 0 <= k < 2^j
+  Outputs
+     ix   index in linear 1-d wavelet transform array where
+          the (j,k) wavelet coefficient is stored
+
+ dyadlength -- Find length and dyadic length of array
+  Usage
+    [n,J] = dyadlength(x)
+  Inputs
+    x    array of length n = 2^J (hopefully)
+  Outputs
+    n    length(x)
+    J    least power of two greater than n
+
+  Side Effects
+    A warning is issued if n is not a power of 2.
+
+  See Also
+    quadlength, dyad, dyad2ix
+
+ dyadpartition -- determine dyadic partition in wavelet transform of 
+                  nondyadic signals
+ edgefold -- Perform folding projection with (+,-) polarity at EDGES
+  Usage
+    extra = edgefold(which,xc,bp,bm)
+  Inputs
+    which  string, 'left'/'right', indicating which edge we are at
+    xc     unfolded data, center window
+    bp     interior of window
+    bm     exterior of window
+  Outputs
+    extra  pseudo-left/right packet
+
+  Description
+    The result should be used as either left or right packet in
+    fold to ensure exact reconstruction at edges.
+
+  See Also
+    fold, unfold, CPSynthesis, CPImpulse
+
+ edgeunfold -- Undo folding projection with (+,-) polarity at EDGES
+  Usage
+    extra = endfold(which,xc,bp,bm)
+  Inputs
+    which  string, 'left'/'right', indicating which edge we are at
+    xc     unfolded data, center window, produced by unfold
+    bp     interior of window
+    bm     exterior of window
+  Outputs
+    extra  extra contribution to central packet
+
+  Description
+    The result should be added to the central packet to
+    ensure exact reconstruction at edges.
+
+  See Also
+    unfold, CPSynthesis, CPImpulse
+
+ extend -- perform various kinds of symmetric extension
+
+ ExtendProj -- Extend a projection to all of the integers -n/2+1 -> n/2
+  Usage
+    extproj = ExtendProj(proj,n,window,sympts,sym)
+  Inputs
+    proj     windowed projection vector
+    n        length of full signal
+    window   string selecting window used in windowing projection
+             'm' -> mother, 'f' -> father, 't' -> truncated mother
+    sympts   points of symmetry and antisymmetry of projection
+    sym      string: symmetry type; 'e' -> even ;'o' -> odd
+  Outputs
+    extproj extended projection of length n
+
+ See Also
+    CoarseMeyerProj, DetailMeyerProj, FineMeyerProj
+
+ ExtractRidge -- Pull One Ridge Continuous Wavelet Transform
+  Usage
+    ridge = ExtractRidge(ridgenum,wt,skellist,skelptr,skellen)
+  Inputs
+    ridgenum  index of ridge to extract, 1 <= ridgenum <= nchains
+    wt        continuous wavelet transform output by CWT
+    skellist  storage for list of chains
+    skelptr   vector of length nchain -- pointers to heads of chains
+    skellen   vector of length nchain -- length of skellists
+  Outputs
+	 ridge	   len by 2 array of numbers, 
+              each row is a scale, amplitude pair
+
+  Description
+    The amplitude of the wavelet transform is followed along the
+    ridge chain. 
+
+  See Also
+    CWT, WTMM, BuildSkelMap, PlotSkelMap
+
+ FCPSynthesis -- Synthesize signal from full cosine packet table
+  Usage
+    sig = FCPSynthesis(cp,bell)
+  Inputs
+    cp       cosine packet table
+    bell     name of orthonormal bell
+  Outputs
+    sig      signal whose cosine packet coeff's in
+             basis come from cp
+
+  See Also
+      CPAnalysis, CPTour, MakeONBell 
+
+ FineMeyerCoeff -- Meyer Coefficients, finest level
+  Usage
+    alpha = FineMeyerCoeff(fhat,n,deg)
+  Inputs
+    fhat     FFT of signal vector, dyadic length.
+    n        length of signal vector (must be of the form 2^J)
+    deg      degree of Meyer window
+  Outputs	
+    alpha    Meyer wavelet coefficients, level j=J-1
+             (length(alpha) = 2^j)
+
+  See Also
+    FoldMeyer, dst_iii, dct_iii, CombineCoeff
+
+ FineMeyerProj -- Invert Meyer Transform, finest level J-1
+  Usage
+    dpjf = FineMeyerProj(alpha,j,n,deg)
+  Inputs
+    alpha    Meyer Wavelet Coefficients, dyadic length 2^j
+    j        resolution level, 2^j = n/2
+    n        length of signal vector (must be of the form 2^J)
+    deg      degree of Meyer window (e.g. 3)
+  Outputs	
+    dpjf     projection of signal onto approximation space V_J-1
+             (length(cpjf) = n)
+
+  See Also
+    UnfoldMeyer, dct_ii, dst_ii, SeparateCoeff, ExtendProj
+
+ FMIPT -- Forward Median Interpolationg Pyramid Transform
+  Usage
+    wc = FMIPT(x,L,D)
+  Inputs
+    x    1-d signal; length(x) = 3^J
+    L    Coarsest Level of V_0;  L << J
+    D    degree of polynomial used in median interpolation, 0 or 2.
+  Outputs
+    wc   1-d median transform of x (twice as long as wc, although the
+         transform is only about 50% expansionist)
+ 
+  Note
+    The MIPT coefficients are "L^2 normalized"
+ 
+  See Also
+    IMIPT
+  
+ FNWT_PO -- Nonstandard Wavelet Transform (Periodized, Orthogonal)
+  Usage
+    nwc = FNWT_PO(x,L,qmf)
+  Inputs
+    x       1-d signal. length(x) = 2^J.
+    L       coarsest resolution level
+    qmf     quadrature mirror filter
+  Outputs
+    nwc     nonstandard wavelet transform of x
+            contains both low-pass and high-pass outputs
+            of pyramid algorithm. length(nw) = 2*length(x) 
+
+  Description
+    if x is a vector and M is a matrix, then one can calculate
+    Mx in two ways:
+          (a) Use natural basis: M*x
+          (b) Use nonstandard matrix product:  INWT[NSF * FNWT[x]]
+    where NWT and INWT are nonstandard wavelet transforms and NSF 
+    is the nonstandard form of the matrix.
+
+  See Also
+    INWT_PO, FSFT_PO
+
+ fold -- Folding projection with (+,-) polarity
+  Usage
+    y = fold(xc,xl,xr,bp,bm)
+  Inputs
+    xc,xl,xr    1-d signals: center, left, and right packets
+    bp,bm       interior and exterior of taper window
+  Outputs
+    y           the folded series, whose DCT gives the LCT coeffs
+
+  See Also
+    CPAnalysis
+
+  References
+    H. Malvar, IEEE ASSP, 1990.
+
+    Auscher, Weiss and Wickerhauser, in ``Wavelets: A Tutorial in
+    Theory and Applications,'' C. Chui, ed., Academic Press, 1992.
+
+ FoldMeyer -- Fold a vector onto itself using a specified window
+  Usage
+    fldx = FoldMeyer(x, sympts, polarity, window,deg)
+  Inputs
+    x         signal vector in frequency domain 
+                 (typically of length n=2^J)
+    sympts    symmetry points, of the form [a,b]
+    polarity  string selection folding polarity
+                 ' mp  =>  (-,+) '
+                 ' pm  =>  (+,-) '
+                 ' mm  =>  (-,-) '
+                 ' pp  =>  (+,+) '
+    window    string selecting window
+                 'm' => Mother Meyer Wavelet Window
+                 't' => Truncated Mother Meyer Wavelet Window
+                 'f' => Father Meyer Wavelet Window
+    deg       degree of Meyer window
+
+  Outputs 
+    fldx      folded version of x. Supported on interval [sympts(1),sympts(2)]
+
+  See Also
+    WindowMeyer, CoarseMeyerCoeff, DetailMeyerCoeff, FineMeyerCoeff
+ 
+ FPT2_CP -- Analyze image into 2-d cosine packet coefficients
+  Usage
+    coef = FPT2_CP(basis,img,D)
+  Inputs
+    basis    Quadtree selecting cosine packet basis
+    img      2-d image to be transformed into basis
+    D        maximum depth of tree
+  Outputs
+    coef     2-d cosine packet coeffts in given basis
+
+  Description
+    Once a cosine packet basis has been selected (presumably via
+    Best2dBasis), this function may be used to expand a given
+    image in that basis.
+
+ FPT2_WP -- Analyze image into 2-d wavelet packet coefficients
+  Usage
+    coef = FPT2_WP(basis,img,qmf)
+  Inputs
+    basis    Quad Tree selecting wavelet packet basis
+    img      2-d image to be transformed into basis
+    qmf      quadrature mirror filter
+  Outputs
+    coef     2-d wavelet packet coeffts in given basis
+
+  Description
+    Once a wavelet packet basis has been selected (presumably via
+    Best2dBasis), this function may be used to expand a given
+    image in that basis.
+
+ FPT_CP -- Fast transform into specific cosine packet basis
+  Usage
+    coef = FPT_CP(basis,x,D,bell)
+  Inputs
+    basis    tree selecting cosine packet basis
+    x        1-d signal to be transformed into basis
+    D,bell	  maximum depth of tree, type of bell
+  Outputs
+    coef     1-d cosine packet coeffts in given basis
+
+  Description
+    Once a cosine packet basis has been selected (presumably via
+    BestBasis), this function may be used to expand a given signal
+    in that basis.
+
+ FPT_WP -- Analyze image into specific wavelet packet basis
+  Usage
+    coef = FPT_WP(basis,x,qmf)
+  Inputs
+    basis    tree selecting wavelet packet basis
+    x        1-d image to be transformed into basis
+    qmf      quadrature mirror filter
+  Outputs
+    coef     1-d wavelet packet coeffts in given basis
+
+  Description
+    Once a wavelet packet basis has been selected (presumably via
+    BestBasis), this function may be used to expand a given signal
+    in that basis.
+
+ FracPartition -- Fractal Partition Function based on wavelet modulus maxima
+  Usage
+    z = FracPartition(cw,mm,q)
+  Inputs
+    cw        matrix output by CWT
+    mm        maxmap output by MMWT
+    q         optional list of exponents default linspace(-2,5,61)
+  Outputs
+    z         matrix nexp by nscale of z(q,a)
+
+  Description
+    z(q,a) = sum_i( |CWT(a,b(i))|^q ),  where b = (b(i)) is a list
+    of wavelet transform maxima  
+    section 6.5.2 of Mallat' book
+
+  See Also
+    RWT, MM_RWT
+
+ FracScalExp -- Calculate Moment Generating Function
+  Usage
+    tau = FracScalExp(z,a,loscale,hiscale)
+  Inputs
+    z         matrix nexp by nscale of z(q,a) ``Thermo Partition Func''
+    scale         list of scales 
+    loscale   optional min scale to fit line by
+    hiscale   optional max scale to fit line by 
+  Outputs
+    tau       vector 1 by nscale of moments
+
+  Description
+    tau(q) = Slope [ log(z(q,a))  versus log(a) ]
+	section 6.5.2 of Mallat's book
+
+  See Also
+    FracPartition
+
+ FracSingSpect -- Calculate Spectrum of Local Scaling Exponents
+  Usage
+    f = FracSingSpect(z,q,alpha)
+  Inputs
+    tau       matrix 1 by nq of tau(q) ``Moment Gen Func''
+    q         optional list of exponents.  Default linspace(-2,5,61)'
+    alpha     optional list of dimensions. Default linspace(.1,.9,11)
+  Outputs
+    f         vector 1 by length(alpha) of fractal dimensions
+
+  Description
+    section 6.5.2 of Mallat's book
+
+  See Also
+    RWT, MM_RWT, FracPartition
+
+ FSFT_PO -- Convert Matrix to Standard Form (Periodized,Orthogonal)
+  Usage
+    S = FSFT_PO(M,L,qmf)
+  Inputs
+    M    Matrix to be put in standard form
+    L    Coarsest Resolution Level of WT
+    qmf  quadrature mirror Filter of Wavelet Transform
+  Outputs
+    S    The matrix M expressed as a matrix operating
+         in wavelet coefficients.
+
+  Description
+    If x is a vector and M is a matrix, then one can calculate
+    Mx in two ways:
+          (a) Use natural basis: M*x
+          (b) Use Wavelet Basis:  IWT[S * FWT[x]]
+    where FWT and IWT are wavelet transforms and SF is the standard
+    form of the matrix. If S is sparse then the second form
+    can be much cheaper to implement.
+
+ FTWT2_PO -- 2-d tensor wavelet transform (periodized, orthogonal)
+  Usage
+    wc = FTWT2_PO(x,L,qmf)
+  Inputs
+    x     2-d image (n by n array, n dyadic)
+    L     coarse level
+    qmf   quadrature mirror filter
+  Outputs
+    wc    2-d wavelet transform
+
+  Description
+    A two-dimensional Wavelet Transform is computed for the
+    array x.  To reconstruct, use ITWT2_PO.
+
+  See Also
+    ITWT2_PO, MakeONFilter
+
+ FTWT2_YN -- 2-dimensional Tensor Product Meyer Wavelet Transform
+  Usage
+    wc = FTWT2_YM(x,L,qmf)
+  Inputs
+    x     2-d image (n by n array, n dyadic)
+    L     coarse level
+    deg   degree of polynomial window 2 <= deg <=4
+  Outputs
+    wc    2-d tensor wavelet transform
+
+  Description
+    A two-dimensional Tensor Meyer Wavelet Transform is computed for the
+    array x.  To reconstruct, use IWT2_YMTensor.
+
+  See Also
+    IWT2_YMTensor
+
+ FWPAtomicSynthesis -- Fast Wavelet Packet Synthesis from Atom List
+  Usage
+    sig = FWPAtomicSynthesis(atomic,wp,qmf)
+  Inputs
+    atomic     1-d atomlist
+    wp         packet table, ignored except for size
+    qmf        orthonormal quadrature mirror filter
+  Outputs
+    sig        the sum of the indicated Time-Frequency Atoms
+
+  See Also
+    WPPursuit, WPAtomicSynthesis
+ 
+ FWPSynthesis -- Synthesize signal from full wavelet packet table
+  Usage
+    sig = FWPSynthesis(wp,qmf)
+  Inputs
+    wp       Wavelet Packet Table 
+    qmf      Wavelet orthonormal qmf
+  Outputs
+    sig      the synthesized signal
+ 
+ The forward dyadic wavelet trasnsform with the Algorithme a
+ trous is not yet implemented in Wavelab. It is implemented in the
+ LastWave software, which is available on the Internet at
+ http://www.cmap.polytechnique.fr/users/www.bacry
+ FWT2_PBS -- 2-dimensional wavelet transform (periodized, biorthonormal)
+  Usage
+    wc = FWT2_PB(x,L,qmf,dqmf)
+  Inputs
+    x     2-d image (n by n array, n dyadic)
+    L     coarse level
+    qmf   quadrature mirror filter
+    dqmf  dual quadrature mirror filter
+  Outputs
+    wc    2-d wavelet transform
+
+  Description
+    A two-dimensional Wavelet Transform is computed for the
+    array x.  To reconstruct, use IWT2_PB.
+
+  See Also
+    IWT2_PB, MakeBSFilter
+
+ FWT2_PBS -- 2-dimensional wavelet transform (periodized, biorthonormal)
+  Usage
+    wc = FWT2_PBS(x,L,qmf,dqmf)
+  Inputs
+    x     2-d image (n by n array, n dyadic)
+    L     coarse level
+    qmf   quadrature mirror filter
+    dqmf  dual quadrature mirror filter
+  Outputs
+    wc    2-d wavelet transform
+
+  Description
+    A two-dimensional Wavelet Transform is computed for the
+    array x.  To reconstruct, use IWT2_PBS.
+
+  See Also
+    IWT2_PBS, MakeBSFilter
+
+ FWT2_PO -- 2-d MRA wavelet transform (periodized, orthogonal)
+  Usage
+    wc = FWT2_PO(x,L,qmf)
+  Inputs
+    x     2-d image (n by n array, n dyadic)
+    L     coarse level
+    qmf   quadrature mirror filter
+  Outputs
+    wc    2-d wavelet transform
+
+  Description
+    A two-dimensional Wavelet Transform is computed for the
+    array x.  To reconstruct, use IWT2_PO.
+
+  See Also
+    IWT2_PO, MakeONFilter
+
+ FWT2_SBS -- 2-dimensional wavelet transform
+              (symmetric extension, bi-orthogonal)
+  Usage
+    wc = FWT2_SBS(x,L,qmf,dqmf)
+  Inputs
+    x     2-d image (n by n array, n arbitrary)
+    L     coarsest level
+    qmf   low-pass quadrature mirror filter
+    dqmf  high-pass dual quadrature mirror filter
+  Output
+    wc    2-d wavelet transform
+  Description
+    A two-dimensional Wavelet Transform is computed for the
+    matrix x. To reconstruct, use IWT2_SBS.
+  See Also
+    IWT2_SBS
+ 
+ FWT_TI -- 2-D translation invariant forward wavelet transform
+  Usage
+    TIWT = FWT2_TI(x,L,qmf) 
+  Inputs
+    x        2-d image (n by n real array, n dyadic)
+    L        degree of coarsest scale
+    qmf      orthonormal quadrature mirror filter 
+  Outputs
+    TIWT     translation-invariant wavelet transform table, (3*(J-L)+1)*n by n
+
+  See Also
+    IWT2_TI, IWT2_TIMedian
+
+ FWT2_YM -- 2d Forward Wavelet Transform (periodized Meyer Wavelet)
+  Usage
+    wc = FWT2_YM(x,deg,L)
+  Inputs
+    x    2-d signal; size(x) = [2^J,2^J]
+    deg  degree of polynomial window 2 <= deg <=4
+    L    Coarse Level for V_0;  L << J
+  Outputs
+    w    2-d wavelet transform of x; 2^J by 2^J.
+
+  Description
+    The Meyer wavelet is defined in the frequency domain.
+    The algorithm is very different from usual quadrature
+    mirror filter algorithms.  See the Ph. D. Thesis of
+    Eric Kolaczyk. To reconstruct use IWT2_YM.
+
+  See Also
+    IWT2_YM, CoarseMeyerCoeff, DetailMeyerCoeff, FineMeyerCoeff
+
+
+  FWT_AI --  Average-Interpolating wavelet transform
+  Usage
+    wc = FWT_AI(x,L,D)
+  Inputs
+    x     1-d signal; length(x) = 2^J
+    L     coarsest resolution. L << J
+    D     degree of polynomials for average interpolation
+  Outputs
+    wc    1-d wavelet transform of x
+
+  Description
+    FWT_AI implements a 1-d wavelet transform of data which
+    arise as the outputs of boxcar integrators.  The ideas are
+    described in ``Smooth Wavelet Decompositions with Blocky
+    Coefficient Kernels.''  See BlockyDemo and the directory
+    Scripts/Blocky.
+
+  See Also
+    IWT_AI, FWT_DD, FWT_PO
+
+ 
+ FWT_ATrou -- Fast Dyadic Wavelet Transform (periodized, orthogonal)
+  Usage
+    dwt = FWT_ATrou(x,L)
+  Inputs
+    x    	1-d signal; length(x) = 2^J = n
+    L    	Coarsest Level of V_0;  L << J
+  Outputs
+    dwt   an n times J-L+1 matrix
+           giving the wavelet transform of x at all dyadic scales.
+
+  Description
+    To reconstruct use IWT_ATrou 
+
+  See Also
+    IWT_ATrou, MakeATrouFilter
+
+ FWT_CDJV -- Forward Wavelet Transform (boundary-corrected)
+  Usage
+    wc = FWT_CDJV(x,L,N)
+  Inputs
+    y    1-d signal, length(x) = 2^J
+    L    Level of V_0;  L << J
+    N    Degree of Daubechies Filters
+
+  Description
+    CDJV have developed an algorithm for wavelets on the interval which
+    preserves the orthogonality, vanishing moments, smoothness, and compact
+    support of Daubechies wavelets on the line.
+
+    The algorithm for wavelets on the interval of CDJV involves four objects
+    not present in the usual periodized algorithm: right edge filters, left
+    edge filters, and pre- and post- conditioning operators.
+
+    These objects are supplied by appropriate requests to MakeCDJVFilter.
+
+    To reconstruct use CDJV_IWT.
+
+  See Also
+    IWT_CDJV, FWT_PO, IWT_PO, MakeCDJVFilter
+
+ FWT_DD -- Interpolating Wavelet Transform 
+  Usage
+    wc = FWT_DD(x,L,D)
+  Inputs
+    x        1-d signal; length(x) = 2^J
+    L        coarsest resolution. L << J
+    D        degree of polynomials for interpolation
+  Outputs
+    wc       1-d wavelet transform of x
+
+  Description
+    FWT_DD implements a 1-d wavelet transform of data which
+    arise as point samples.  It is based on Deslauriers-Dubuc 
+    Refinemnt. The ideas are described in the paper 
+    "Interpolating Wavelet Transforms".
+
+  See Also
+    IWT_DD, FWT_AI, FWT_PO 
+
+ FWT_IO -- Forward Wavelet Transform (boundary-corrected)
+  Usage
+    wc = FWT_IO(x,L,N)
+  Inputs
+    y    1-d signal, length(x) = 2^J
+    L    Level of V_0;  L << J
+    N    Degree of Daubechies Filters (2 or 3)
+
+  Description
+    CDJV have developed an algorithm for wavelets on the interval which
+    preserves the orthogonality, vanishing moments, smoothness, and compact
+    support of Daubechies wavelets on the line.
+
+    The algorithm for wavelets on the interval of CDJV involves four objects
+    not present in the usual periodized algorithm: right edge filters, left
+    edge filters, and pre- and post- conditioning operators.
+
+    These objects are supplied by appropriate requests to MakeCDJVFilter.
+
+    To reconstruct use CDJV_IWT.
+
+  See Also
+    IWT_IO, FWT_PO, IWT_PO, MakeOBFilter
+
+ FWT_PB -- Forward Wavelet Transform (periodized, biorthogonal)
+  Usage
+    wc = FWT_PB(x,L,qmf,dqmf)
+  Inputs
+    x      1-d signal; length(x) = 2^J
+    L      Coarsest Level of V_0;  L << J
+    qmf    quadrature mirror filter (symmetric)
+    dqmf   quadrature mirror filter (symmetric, dual of qmf)
+  Outputs
+    wc     1-d wavelet transform of x.
+
+  Description
+    1. qmf filter may be obtained from MakeBSFilter   
+    2. usually, length(qmf) < 2^(L+1)
+    3. To reconstruct use IWT_PB
+
+  See Also
+    IWT_PB, MakeBSFilter
+
+ FWT_PBS -- Forward Wavelet Transform (periodized, biorthogonal, symmetric)
+  Usage
+    wc = FWT_PBS(x,L,qmf,dqmf)
+  Inputs
+    x      1-d signal; length(x) = 2^J
+    L      Coarsest Level of V_0;  L << J
+    qmf    quadrature mirror filter (symmetric)
+    dqmf   quadrature mirror filter (symmetric, dual of qmf)
+  Outputs
+    wc     1-d wavelet transform of x.
+
+  Description
+    1. qmf filter may be obtained from MakeBSFilter   
+    2. usually, length(qmf) < 2^(L+1)
+    3. To reconstruct use IWT_PBS
+
+  See Also
+    IWT_PBS, MakeBSFilter
+
+ FWT_PO -- Forward Wavelet Transform (periodized, orthogonal)
+  Usage
+    wc = FWT_PO(x,L,qmf)
+  Inputs
+    x    1-d signal; length(x) = 2^J
+    L    Coarsest Level of V_0;  L << J
+    qmf  quadrature mirror filter (orthonormal)
+  Outputs
+    wc    1-d wavelet transform of x.
+
+  Description
+    1. qmf filter may be obtained from MakeONFilter   
+    2. usually, length(qmf) < 2^(L+1)
+    3. To reconstruct use IWT_PO
+
+  See Also
+    IWT_PO, MakeONFilter
+
+ FWT_SBS -- Forward Wavelet Transform (symmetric extension, biorthogonal, symmetric)
+  Usage
+    wc = FWT_SBS(x,L,qmf,dqmf)
+  Inputs
+    x    1-d signal; arbitrary length
+    L    Coarsest Level of V_0;  L << J
+    qmf    quadrature mirror filter (symmetric)
+    dqmf   quadrature mirror filter (symmetric, dual of qmf)
+  Outputs
+    wc    1-d wavelet transform of x.
+ 
+  Description
+    1. qmf filter may be obtained from MakePBSFilter
+    2. usually, length(qmf) < 2^(L+1)
+    3. To reconstruct use IWT_SBS
+ 
+  See Also
+    IWT_SBS, MakePBSFilter
+ 
+  References
+   Based on the algorithm developed by Christopher Brislawn.
+   See "Classification of Symmetric Wavelet Transforms"
+ 
+ FWT_Stat -- stationary wavelet transform
+  Usage
+    StatWT = FWT_Stat(x,D,qmf) 
+  Inputs
+    x        array of dyadic length n=2^J
+    L        degree of coarsest scale
+    qmf      orthonormal quadrature mirror filter 
+  Outputs
+    StatWT   stationary wavelet transform table
+             formally same data structure as packet table
+             log_2(n)-D scales by n elements 
+
+  See Also
+    IWT_Stat, FWT_TI
+
+ FWT_TI -- translation invariant forward wavelet transform
+  Usage
+    TIWT = FWT_TI(x,L,qmf) 
+  Inputs
+    x        array of dyadic length n=2^J
+    L        degree of coarsest scale
+    qmf      orthonormal quadrature mirror filter 
+  Outputs
+    TIWT     stationary wavelet transform table
+             formally same data structure as packet table
+
+  See Also
+    IWT_TI
+
+ FWT_YM -- Forward Wavelet Transform (periodized Meyer Wavelet)
+  Usage
+    w = FWT_YM(x,L,deg)
+  Inputs
+    x    1-d signal; length(x) = 2^J
+    L    Coarsest Level of V_0;  L << J
+    deg  degree of polynomial window 2 <= deg <=4
+  Outputs
+    w    1-d wavelet transform of x
+
+  Description
+    The Meyer wavelet is defined in the frequency domain.
+    The algorithm is very different from usual quadrature
+    mirror filter algorithms.  See the Ph. D. Thesis of
+    Eric Kolaczyk. To reconstruct use IWT_YM
+
+  See Also
+    IWT_YM, CoarseMeyerCoeff, DetailMeyerCoeff, FineMeyerCoeff
+
+ The matching pursuit algorithm in a Gabor dictionary is not yet
+ implemented in Wavelab. It is implemented in the LastWave
+ software, which is available on the Internet at
+ http://www.cmap.polytechnique.fr/users/www.bacry
+ GrayImage -- Standard gray-scale image display
+  Usage
+    GrayImage(img,ngray)
+  Inputs
+    img      a 2-d image, n by n
+    ngray    optional. number of gray levels in colormap, default 255
+
+  Side Effects
+    A gray scale presentation of img
+
+  GWN- Generation of Gaussian White Noise
+  Usage
+    B=GWN(n,beta)
+  Inputs   
+    n	 size of datas
+    beta	standard deviation
+  Outputs
+    B	resulting noise
+
+  GWN2- Generation of 2-D Gaussian White NNoise
+  Usage
+    B=GWN2(n,beta)
+  Inputs   
+    n	size of datas
+    beta	standard deviation
+  Outputs
+    B	resulting noise
+
+  GWNoisy- Addition of a Gaussian White Noise
+  Usage
+    Noisysig = GWNoisy(sig,sigma)
+  Inputs
+    sig        Input signal
+    sigma   s.d for additive Gaussian White Noise
+  Outputs
+    Noisysig    1-d signal
+
+  GWNoisy2- Addition of a 2D Gaussian White Noise
+  Usage
+    Noisyim = GWNoisy2(im,sigma)
+  Inputs
+    im        Input simage
+    sigma   s.d for additive GWN
+  Outputs
+    Noisyim    Noisy image
+
+ HardThresh -- Apply Hard Threshold 
+  Usage 
+    x = HardThresh(y,t)
+  Inputs 
+    y     Noisy Data 
+    t     Threshold
+  Outputs 
+    x     y 1_{|y|>t}
+
+ HCoarsen2d -- 2-d Coarsening operator based on Haar Pyramid
+  Usage
+    coarse = HCoarsen2d(fine,L)
+  Inputs
+    fine     2-d image on fine grid
+    L        integer >= 1. number of dyadic coarsenings
+  Outputs
+    coarse   2-d image on coarse grid
+
+  Description
+    Two-by-Two quads of blocks are replaced by single blocks
+    having the average value of the quad. This is repeated
+    through L generations. Starting from data on a grid of
+    n*n points, delivers averages on a coarser grid of 
+    n/2^L * n/2^L  points.
+
+  See Also
+    HRefine2d, AIRefine2d
+
+ HitAnyKey -- Tool for pausing in scripts
+  Usage
+    HitAnyKey([arg])
+  Inputs
+    arg    optional value to store into global HitKeyMemory
+
+  Description
+    Hit any key to continue
+
+ HRefine2d -- 2-d Refinement based on Haar Pyramid
+  Usage
+    fine = HRefine2d(coarse,L)
+  Inputs
+    coarse    2-d image at a coarse scale: length(coarse)=n
+    L         integer >=1. number of generations to refine by
+  Outputs
+    fine      2-d image at a fine scale: size(fine) = 2^L * size(coarse)
+
+  Description
+    Trivial Refinement scheme is used to refine boxcar averages
+    on a grid of n*n points, imputing averages on a finer grid
+    of 2^L n * 2^L n points. Specifically, for L generations,
+    each block in the parent is replaced by a 2*2 block in the
+    child, all having the same value as in the parent.
+
+  See Also
+    HCoarsen2d, AIRefine2d
+
+  HT -- Hard Threshold Applied to Wavelet Coefficients.
+  Usage 
+    [out,wcoef,wcoefrest] = HT(Noisy,L,qmf,sigma,coef)
+  Inputs
+    Noisy      1-d signal. length(y)= 2^J
+    L      Low-Frequency cutoff for shrinkage (e.g. L=4)
+               Should have L << J!
+    qmf    Quadrature Mirror Filter for Wavelet Transform
+               Optional, Default = Symmlet 8.
+    sigma  Standard deviation of additive Gaussian White Noise.
+  Outputs 
+    out     	estimate, obtained by applying hard thresholding on
+          	wavelet coefficients
+    wcoef	Wavelet Transform of input signal	
+    wcoefrest  Wavelet Transform of estimate
+
+  HT2 -- Hard Threshold Applied to Image Wavelet Coefficients.
+  Usage 
+    out = HT2(Noisy,L,qmf,sigma)
+  Inputs
+    Noisy      2-d signal.
+    L          Low-Frequency cutoff for shrinkage (e.g. L=4)
+               Should have L << J!
+    qmf        Quadrature Mirror Filter for Wavelet Transform
+               Optional, Default = Symmlet 8.
+    thresh     Threshold to apply on the wavelet coefficients
+  Outputs 
+    out     	estimate, obtained by applying hard thresholding on
+          	 wavelet coefficients
+ HybridThresh -- Adaptive Threshold Selection Using Principle of SURE
+  Usage
+    xhat = HybridThresh(y)
+  Inputs
+    y     Noisy Data with Std. Deviation = 1
+  Outputs
+    xhat  Estimate of mean vector
+
+  Description
+    SURE refers to Stein's Unbiased Risk Estimate.
+
+  References
+   ``Adapting to Unknown Smoothness by Wavelet Shrinkage''
+   by D.L. Donoho and I.M. Johnstone.
+
+ This function is not yet implemented in WaveLab.
+ iconv -- Convolution Tool for Two-Scale Transform
+  Usage
+    y = iconv(f,x)
+  Inputs
+    f   filter
+    x   1-d signal
+  Outputs
+    y   filtered result
+
+  Description
+    Filtering by periodic convolution of x with f
+
+  See Also
+    aconv, UpDyadHi, UpDyadLo, DownDyadHi, DownDyadLo
+
+  IdealWavDenoise -- Simulation of an Ideal Thresholding Applied to
+   Wavelet Coefficients.
+  Usage 
+    [out,wcoef,wcoefrest] = IdealWavDenoise(Orig,Noisy,L,qmf,sigma)
+  Inputs
+    Orig 	1-d original Signal (length= 2^J).
+    Noisy 	1-d noisy signal. 
+    L      	Low-Frequency cutoff for shrinkage (e.g. L=4)
+               Should have L << J!
+    qmf    Quadrature Mirror Filter for Wavelet Transform
+               Optional, Default = Symmlet 8.
+    sigma  Standard deviation of additive Gaussian White Noise.
+  Outputs 
+    out     	estimate, obtained by applying hard thresholding on
+          	 wavelet coefficients
+    wcoef		Wavelet Transform of input signal	
+    wcoefrest    	Wavelet Transform of estimate
+
+ ifprint -- Conditional printing to postscript file
+  Usage
+    ifprint(fig,file)
+  Inputs
+    fig     handle of figure to print
+    file    name of file to print to
+
+  Description
+    Global variables affect the conditional printing:
+
+       PRINTING  if ==1, printing is done, if ==0 printing
+                 is skipped
+
+       FOOTNOTE  if ==1, a footnote with the filename and
+                 date is added to the plot, if ==0, no 
+                 footnote is added
+
+  Side Effects
+    If PRINTING or FOOTNOTE are not defined, prompts are
+    generated to set these global variables.
+
+ ImageAtomicPhase -- Image time-frequency content of atom list
+  Usage
+    ImageAtomicPhase(TFType,atomlist,n[,titlestr,nTFR,qmf]) 
+  Inputs
+    TFtype    	string, specifying type of TF atoms, 'CP' or 'WP' 
+    atomlist  	atom list, e.g. as produced by CPPursuit
+    n         	signal length
+    titlestr  	signal name (optional)
+    nTFR       number of x-points in phaseplane image (optional)
+    qmf        qmf for calculating WP phase plane location (optional)
+
+  Side Effects
+    Image of Time-Frequency Plane, with shading showing Heisenberg
+    cells of the atoms making a significant contribution.
+
+  See Also
+    CPPursuit, WPPursuit
+
+ ImageCWT -- Image of Continuous Wavelet Transform
+  Usage
+    ImageCWT(cwt,scaling,colors)
+  Inputs
+    cwt      matrix produced by CWT
+    scaling  string, 'Overall', 'Individual'
+    colors   string  argument for colormap
+    option   'lin' or 'log' for the type of display
+    oct      Default=2
+    scale    Default=4
+
+  Side Effects
+    Image Display of Continuous Wavelet Transform
+
+ ImageFig -- Part of BrowseImages demo
+  Usage
+    ImageFig(num)
+  Inputs
+    num    code for type of display
+           1-9   display specific image
+           10    display all images in turn
+
+  Description
+    ImageFig is called by BrowseImages and is not intended for general use.
+
+  See Also
+    BrowseImages
+
+ ImageGaborPhase -- Time-Frequency Display with congruent rectangles
+  Usage
+    ImageGaborPhase(pkt,ell[,titlestr])
+  Inputs
+    TFType    type of time-frequency decomposition: 'WP' or 'CP'
+    pkt       wavelet or cosine packet table
+    ell       level of packet table to use
+    titlestr  optional title string for plot
+
+  Side Effects
+    Phase plot with 2^(ell-1) vertical and n/(2^(ell-1))
+    horizontal subdivisions.
+
+  See Also
+    ImagePhasePlane, CPTour, WPTour
+
+ ImagePacketPhase -- Partition phase space by rectangular blocks
+  Usage
+    ImagePacketPhase(TFtype,pkt[,titlestr,nTFR,qmf]) 
+  Inputs
+    TFtype     string: type of TF-packets used ('WP','CP')
+    pkt        wavelet or cosine packet table
+    titlestr   signal name (optional)
+    nTFR       number of x-points in phaseplane image (optional)
+    qmf        qmf for calculating WP phase plane location (optional)
+
+  Side Effects
+    An image plot with gray rectangles based on assigning mass
+    proportional to coefficient to square of Heisenberg rectangle.
+
+  See Also
+    ImageGaborPhase, ImageWavePhase, PlotPhasePlane
+
+ ImagePhasePlane -- Partition phase space by rectangular blocks
+  Usage
+    ImagePhasePlane(TFtype,basis,pkt[,titlestr,nTFR,qmf])
+  Inputs
+    TFtype     string: type of TF-packets used ('WP','CP')
+    btree      basis tree
+    pkt        wavelet or cosine packet table
+    titlestr   signal name (optional)
+    nTFR       number of x-points in phaseplane image (optional)
+    qmf        qmf for calculating WP phase plane location (optional)
+
+  Side Effects
+    An image plot with colored rectangles based on 
+    recursive dyadic partitioning of y axis according
+    to splits in basis tree.
+
+  See Also
+    ImageGaborPhase, ImageWavePhase, PlotPhasePlane
+
+ ImagePhaseVarious -- Compare four phase plane displays
+  Usage
+    ImagePhaseVarious(wp,wp_stree,cp,cp_stree,titlestr)
+  Inputs  
+    wp          Wavelet Packet table
+    wp_stree    Wavelet Packet Stat tree
+    cp          Cosine Packet table
+    cp_stree    Cosine Packet Stat tree
+    titlestr    title for plots
+
+  Side Effects
+    For Both Wavelet packets & Cosine Packets:
+       phase plot, best level
+       phase plot, best basis
+       printout, entropies best level, best basis
+
+  See Also
+    ImagePhasePlane, PlotPhaseVarious
+
+ ImageRWT -- Image of Continuous Wavelet Transform
+  Usage
+    ImageRWT(rwt,scaling,colors)
+  Inputs
+    rwt      matrix produced by RWT
+    scaling  string, 'Overall', 'Individual'
+    colors   string  argument for colormap
+    option   'lin' or 'log' for the type of display
+
+  Side Effects
+    Image Display of Continuous Wavelet Transform
+
+ ImageWTMM -- Maxima of Continuous Wavelet Transform
+  Usage
+    ImageWTMM(maxmap)
+  Inputs
+    maxmap      maxmap produced by WTMM
+    option      'lin' or 'log' (default) for display
+    color       character color, default yellow
+    titlestr    optional. if supplied & empty, suppress title
+                if supplied & nonempty replace default title.
+
+  Side Effects
+    Spy Display of Maxima of CWT
+
+ IMIPT -- Inverse Median Transform
+  Usage
+    x = IMIPT(wc,L,D)
+  Inputs
+    wc   median transform coefficient; length(wc) = 2*3^J
+    L    Coarsest Level of V_0;  L << J
+    D    degree of polynomial used in interpolation, 0 or 2.
+  Outputs
+    x    1-d signal reconstructed from wc
+ 
+  Description
+    Suppose wc = FMIPT(x,L,D). Then x can be reconstructed by
+      x = IMIPT(wc,L,D)
+
+  See Also
+    FMIPT
+  
+ The invese reconstruction of an image from the modulus maxima of
+ its dyadic wavelet transform is not yet implemented in Wavelab.
+ It is implemented in the LastWave software, which is available on
+ the Internet at http://www.cmap.polytechnique.fr/users/www.bacry.
+ MaxRecons - Inverse Reconstruction of signals from Modulus
+	      Maxima of a Dyadic Wavelet Transform
+ Usage f = MaxRecons(maxima);
+ Inputs 
+	maxima 		n times b matrix storing the positions
+			and values of a dyadic wavelet transform
+ Outputs
+	f		signal, size n
+ References
+   Mallat's book, section 6.3.2
+
+ Interpolates signal f (length N ) to a signal g (length 2N)
+ such that g(2*n) = f(n)
+
+
+ InvShrink -- Shrinkage with Exponential Factor applied
+  Usage
+    s = InvShrink(wc,L,sa,alpha)
+  Inputs
+    wc      Wavelet Transform of noisy sequence with N(0,1) noise
+    L       low-frequency cutoff for Wavelet Transform
+    sa      noise level at highest resolution level
+    alpha   decay rate of noise level with resolution level
+  Outputs
+    ws      result of applying FixShrink to each wavelet level,
+            with appropriate weighting 
+
+ INWT_PO -- Inverse Nonstandard Wavelet Transform (Periodized, Orthogonal)
+  Usage
+    x = INWT_PO(nwc,L,qmf)
+  Inputs
+    nwc     nonstandard wavelet transform. Produced by FNWT_PO.
+    L       coarsest resolution level
+    qmf     quadrature mirror filter
+  Outputs
+    x       1-d signal. length(x) = 2^J.
+
+  Description
+    if x is a vector and M is a matrix, then one can calculate
+    Mx in two ways:
+          (a) Use standard basis: M*x
+          (b) Use wavelet Basis:  INWT[NSF * FNWT[x]]
+    where NWT and INWT are nonstandard wavelet transforms and NSF 
+    is the nonstandard form of the matrix.
+
+  See Also
+    FNWT_PO, FSFT_PO
+
+ IPT2_CP -- Synthesize image from 2-d cosine packet coefficients
+  Usage
+    img = IPT2_CP(basis,coef,D)
+  Inputs
+    basis    Quad Tree selecting cosine packet basis
+    coef     coefficients in that basis
+    D        maximum depth of tree
+  Outputs
+    img      reconstruction from 2-d cosine packet coeffts in given basis
+
+  Description
+    Perform the inverse operation of FPT2_CP.
+
+ IPT2_WP -- Synthesize image from 2-d wavelet packet coefficients
+  Usage
+    img = IPT2_WP(btree,coef,qmf)
+  Inputs
+    btree    Quad Tree indicating wavelet packet to use
+    coef     2-d wavelet packet coeffts in given basis
+    qmf      quadrature mirror filter
+  Outputs
+    img      2-d image whose 2-d wavelet packet coefft's in
+             basis are coef
+  Description
+    Perform the inverse operation of FPT2_WP.
+
+ IPT_CP -- Synthesize signal from cosine packet coefficients
+  Usage
+    x = IPT_CP(btree,coef,D,bell)
+  Inputs
+    btree    basis tree selecting Cosine Packet basis
+    coef     coefficients in that basis
+    D        maximum splitting depth
+    bell     name of orthonormal bell
+  Outputs
+    x        1-d signal whose cosine packet coeff's in
+             basis btree come from cp 
+
+  Description
+    Perform the inverse operation of FPT_CP.
+
+  See Also
+      CPAnalysis, CPTour, MakeONBell 
+
+ IPT_WP -- Synthesize signal from wavelet packet coefficients
+  Usage
+    x = IPT_WP(btree,coef,qmf)
+  Inputs
+    btree    basis tree selecting wavelet packet basis
+    coef     coefficients in that basis
+    qmf      quadrature mirror filter
+  Outputs
+    x        1-d signal synthesized from coefficients.
+
+  Description
+    Perform the inverse operation of FPT_WP.
+
+  See Also
+    WPAnalysis, WPTour, MakeONFilter
+
+ iRWT -- Inverse Real Wavelet Transform
+  Usage
+    sig = iRWT(rwt,scale);
+  Inputs
+    rwt	matrix n by nscale, output from RWT.m
+    scale	real signal, complementary part, output from RWTscale.m
+  Output
+    sig	1-d real signal. 
+  Side Effects
+  Description
+    We did not really calculate the scaling function. In fact, scale is 
+    a record of residual in Frequency Domain.
+    Why not use scaling function,
+	1. complicated to implement;
+	2. differ with various window, what's the difference in tracing
+	   a residual in Frequency domain than in space expanded by scaling
+	   function.
+  Algorithm
+    The result is PSEUDO Inverse Real Wavelet Transform. 
+  Examples
+     CantorMeasure = MakeFractal(1024,3,'Deterministic',[.5 0 .5]);
+     Devil  = cumsum(CantorMeasure); 
+     Devil_rwt = RWT(Devil,12,'Sombrero');
+     scale = RWTscale(Devil,Devil_rwt);
+     sig = iRWT(Devil_rwt,scale); 
+     subplot(211);  	plot(Devil);    
+     subplot(212);	plot(sig);
+  See Also
+    RWT   RWTscale
+  Description
+    Reconstruct original signal from Continuous Wavelet Transform
+  References
+    Mallat, "A Wavelet Tour of Signal Processing"; 4.3.1 Real Wavelets.
+
+
+ ISFT_PO -- Convert Standard Form to Matrix Form (Periodized,Orthogonal)
+  Usage
+    M = ISFT_PO(S,L,qmf)
+  Inputs
+    S    Matrix operating in wavelet basis
+    L    Coarsest Resolution Level of WT
+    qmf  quadrature mirror Filter of Wavelet Transform
+  Outputs
+    M    The matrix S expressed as a matrix operating
+         in standard basis.
+
+  Description
+    if x is a vector and M is a matrix, then one can calculate
+    Mx in two ways:
+          (a) Use natural basis: M*x
+          (b) Use wavelet Basis:  IWT[S * FWT[x]]
+    where FWT and IWT are wavelet transforms and S is the standard
+    form of the matrix.
+
+  See Also
+    FSFT_PO
+
+ IWT2_PO -- Inverse 2-d tensor wavelet transform (periodized, orthogonal)
+  Usage
+    x = IWT2_PO(wc,L,qmf)
+  Inputs
+    wc    2-d wavelet transform [n by n array, n dyadic]
+    L     coarse level
+    qmf   quadrature mirror filter
+  Outputs
+    x     2-d signal reconstructed from wc
+
+  Description
+    If wc is the result of a forward 2d wavelet transform, with
+    wc = FTWT2_PO(x,L,qmf), then x = ITWT2_PO(wc,L,qmf) reconstructs x
+    exactly if qmf is a nice qmf, e.g. one made by MakeONFilter.
+
+  See Also
+    FTWT2_PO, MakeONFilter
+
+ ITWT2_YM -- Inverse 2d Tensor Meyer Wavelet Transform
+  Usage
+    x = ITWT2_YM(wc,L,qmf)
+  Inputs
+    wc    2-d tensor wavelet transform [n by n array, n dyadic]
+    L     coarse level
+    deg   degree of polynomial window 2 <= deg <=4
+  Outputs
+    x     2-d signal reconstructed from wc
+
+  Description
+    If wc is the result of a forward 2d wavelet transform, with
+         wc = FWT2_YMTensor(x,L,deg)
+    then x = IWT2_YMTensor(wc,L,deg) reconstructs x exactly.
+    
+  See Also
+    FWT2_YMTensor
+
+ IWindowFT -- Inverse Window Fourier Transform
+  Usage
+    sig = IWindowFT(specgm,w,Name)
+  Inputs
+    specgm    Window Fourier Transform of sig, complex matrix
+    w        window half-length used to construct specgm
+    Name     string: 'Rectangle', 'Hanning', 'Hamming',
+             'Gaussian', 'Blackman' 
+              name of window used to construct specgm
+  Outputs
+    sig      1-d signal
+  Side Effects
+    none
+  Description
+     supposes signal is non-periodic, i.e. zero-padded
+     reconstruction is not exact in the border region, but it is
+     exact in the center
+  See Also
+    WindowFT
+  References
+    Mallat, "A Wavelet Tour in Signal Processing"; 
+            4.2.3 Discrete Windowed Fourier Transform.
+
+ IWT2_PBS -- Inverse 2d Wavelet Transform (periodized, biorthogonal)
+  Usage
+    x = IWT2_PB(wc,L,qmf,dqmf)
+  Inputs
+    wc    2-d wavelet transform [n by n array, n dyadic]
+    L     coarse level
+    qmf   quadrature mirror filter
+    qmf   dual quadrature mirror filter
+  Outputs
+    x     2-d signal reconstructed from wc
+
+  Description
+    If wc is the result of a forward 2d wavelet transform, with
+           wc = FWT2_PB(x,L,qmf,dqmf)
+    then x = IWT2_PB(wc,L,qmf,dqmf) reconstructs x exactly if 
+    [qmf,dqmf] is a nice pair of quadrature mirror filters, e.g. 
+    one made by MakeBSFilter.
+
+  See Also
+    FWT2_PB, MakeONFilter
+
+ IWT2_PBS -- Inverse 2d Wavelet Transform (periodized, biorthogonal)
+  Usage
+    x = IWT2_PBS(wc,L,qmf,dqmf)
+  Inputs
+    wc    2-d wavelet transform [n by n array, n dyadic]
+    L     coarse level
+    qmf   quadrature mirror filter
+    qmf   dual quadrature mirror filter
+  Outputs
+    x     2-d signal reconstructed from wc
+
+  Description
+    If wc is the result of a forward 2d wavelet transform, with
+           wc = FWT2_PBS(x,L,qmf,dqmf)
+    then x = IWT2_PBS(wc,L,qmf,dqmf) reconstructs x exactly if 
+    [qmf,dqmf] is a nice pair of quadrature mirror filters, e.g. 
+    one made by MakeBSFilter.
+
+  See Also
+    FWT2_PBS, MakeONFilter
+
+ IWT2_PO -- Inverse 2-d MRA wavelet transform (periodized, orthogonal)
+  Usage
+    x = IWT2_PO(wc,L,qmf)
+  Inputs
+    wc    2-d wavelet transform [n by n array, n dyadic]
+    L     coarse level
+    qmf   quadrature mirror filter
+  Outputs
+    x     2-d signal reconstructed from wc
+
+  Description
+    If wc is the result of a forward 2d wavelet transform, with
+    wc = FWT2_PO(x,L,qmf), then x = IWT2_PO(wc,L,qmf) reconstructs x
+    exactly if qmf is a nice qmf, e.g. one made by MakeONFilter.
+
+  See Also
+    FWT2_PO, MakeONFilter
+
+ IWT2_SBS -- Inverse 2d Wavelet Transform
+            (symmetric extention, bi-orthogonal)
+  Usage
+    x = IWT2_SBS(wc,L,qmf,dqmf)
+  Inputs
+      wc    2-d wavelet transform [n by n array, n arbitrary]
+      L     coarse level
+      qmf   low-pass quadrature mirror filter
+      dqmf  high-pas dual quadrature mirror filter
+  Outputs
+      x     2-d signal reconstructed from wc
+  Description
+      If wc is the result of a forward 2d wavelet transform, with
+           wc = FWT2_SBS(x,L,qmf,dqmf)
+      then x = IWT2_SBS(wc,L,qmf,dqmf) reconstructs x exactly if qmf is a nice
+      quadrature mirror filter, e.g. one made by MakeBioFilter
+  See Also:
+    FWT2_SBS, MakeBioFilter
+
+ IWT2_TI -- Invert 2-d translation invariant wavelet transform
+  Usage
+    x = IWT2_TI(TIWT,qmf)
+  Inputs
+    TIWT     translation-invariant wavelet transform table, (3*(J-L)+1)*n by n
+    L        degree of coarsest scale
+    qmf      quadrature mirror filter
+  Outputs
+    x        2-d image reconstructed from translation-invariant transform TIWT
+
+  See Also
+    FWT2_TI, IWT2_TIMedian
+
+ IWT2_YM -- 2d Inverse Wavelet Transform (periodized Meyer Wavelet)
+  Usage
+    x = IWT2_YM(wc,L,deg)
+  Inputs
+    wc   2-d wavelet transform, size(wc) = [2^J,2^J].
+    L    Coarsest Level of V_0;  L << J
+    deg  degree of polynomial window 2 <= deg <=4
+  Outputs
+    x    1-d reconstructed signal; length(x) = 2^J
+
+  Description
+    The 2d Meyer wavelet transform is obtained by the command
+        wc = FWT2_YM(x,L,deg)
+
+    To reconstruct x, use IWT2_YM.
+
+    The Meyer wavelet is defined in the frequency domain.
+    The algorithm is very different from usual quadrature
+    mirror filter algorithms.  See the Ph. D. Thesis of
+    Eric Kolaczyk.
+
+  See Also
+    FWT2_YM, CoarseMeyerProj, DetailMeyerProj, FineMeyerProj
+
+
+ IWT_AI -- Inverse transform, average-interpolating wavelets
+  Usage
+    x = IWT_AI(wc,L,D)
+  Inputs
+    wc    1-d wavelet transform; length(x) = 2^J
+    L     coarsest resolution. L << J
+    D     degree of polynomials for average interpolation
+  Outputs
+    x     1-d signal reconstructed from wc
+
+  Description
+    IWT_AI implements a 1-d inverse wavelet transform of data which
+    arise as the outputs of boxcar integrators.  The ideas are
+    described in ``Smooth Wavelet Decompositions with Blocky
+    Coefficient Kernels.''  See BlockyDemo and the directory
+    Scripts/Blocky.
+
+  See Also
+    FWT_AI, FWT_DD, FWT_PO 
+
+
+ IWT_ATrou -- Inverse Dyadic Wavelet Transform
+  Usage
+    s = IWT_ATrou(dwt,L)
+  Inputs
+    dwt  an n times J-L+1 matrix
+    L    Coarsest Level of V_0;  L << J
+  Outputs
+    s	original 1-d signal; length(x) = 2^J = n
+  Description
+    1. filters are obtained with MakeATrouFilter
+    2. usually, length(qmf) < 2^(L+1)
+    3. The transformed signal can be obtained by FWT_ATrou
+  See Also
+    FWT_ATrou, MakeATrouFilter
+
+ IWT_CDJV -- Inverse Wavelet Transform  (boundary corrected)
+  Usage
+    x = IWT_CDJV(wc,L,N)
+  Inputs
+    wc   1-d wavelet transform
+    L    Level of V_0;  L << J
+    N    Degree of Daubechies Filters
+  Outputs
+    x    1-d signal: length(y) = 2^J
+
+  See Also
+    FWT_CDJV, MakeCDJVFilter
+
+  References
+   This is an implementation of the Cohen-Daubechies-Jawerth-Vial Algorithm
+   for orthonormal wavelet bases of compact support, with boundary corrected
+   wavelets at 0 and 1.
+
+ IWT_DD -- Inverse transform Deslauriers-Dubuc wavelets
+  Usage
+    x = IWT_DD(wc,L,D)
+  Inputs
+    wc       1-d wavelet transform; length(w) = 2^J
+    L        coarsest resolution. L << J
+    D        degree of interpolating polynomials
+  Outputs
+    x        1-d signal reconstructed from w
+
+  Description
+    IWT_DD implements a 1-d inverse wavelet transform of data which
+    arise as the outputs of point sampling devices.  The ideas are
+    described in ``Interpolating Wavelet Transforms.''
+
+  See Also
+    FWT_DD, FWT_AI, FWT_PO 
+
+ IWT_IO -- Inverse Wavelet Transform  (boundary corrected)
+  Usage
+    x = IWT_IO(wc,L,N)
+  Inputs
+    wc   1-d wavelet transform
+    L    Level of V_0;  L << J
+    N    Degree of Daubechies Filters
+  Outputs
+    x    1-d signal: length(y) = 2^J
+
+  See Also
+    FWT_IO, MakeOBFilter
+
+  References
+   This is an implementation of the Cohen-Daubechies-Jawerth-Vial Algorithm
+   for orthonormal wavelet bases of compact support, with boundary corrected
+   wavelets at 0 and 1.
+
+ IWT_PB -- Inverse Wavelet Transform (periodized, biorthogonal)
+  Usage
+    x = IWT_PB(wc,L,qmf)
+  Inputs
+    wc      1-d wavelet transform: length(wc)= 2^J.
+    L       Coarsest scale (2^(-L) = scale of V_0); L << J;
+    qmf     quadrature mirror filter
+    dqmf    dual quadrature mirror filter (symmetric, dual of qmf)
+  Outputs
+    x       1-d signal reconstructed from wc
+
+  Description
+    Suppose 
+          wc = FWT_PB(x,L,qmf,dqmf);
+
+    where analysis_qmf is a biorthogonal symmetric quadrature
+    mirror filter as made by 
+          [qmf,dqmf] = MakeBSFilter(Request,par);
+
+    Then x can be reconstructed by
+          x = IWT_PBS(wc,L,qmf,dqmf);
+
+  See Also
+    FWT_PBS, MakeBSFilter
+
+ IWT_PBS -- Inverse Wavelet Transform (periodized, biorthogonal,symmetric)
+  Usage
+    x = IWT_PBS(wc,L,qmf)
+  Inputs
+    wc      1-d wavelet transform: length(wc)= 2^J.
+    L       Coarsest scale (2^(-L) = scale of V_0); L << J;
+    qmf     quadrature mirror filter
+    dqmf    dual quadrature mirror filter (symmetric, dual of qmf)
+  Outputs
+    x       1-d signal reconstructed from wc
+
+  Description
+    Suppose 
+          wc = FWT_PBS(x,L,qmf,dqmf);
+
+    where analysis_qmf is a biorthogonal symmetric quadrature
+    mirror filter as made by 
+          [qmf,dqmf] = MakeBSFilter(Request,par);
+
+    Then x can be reconstructed by
+          x = IWT_PBS(wc,L,qmf,dqmf);
+
+  See Also
+    FWT_PBS, MakeBSFilter
+
+ IWT_PO -- Inverse Wavelet Transform (periodized, orthogonal)
+  Usage
+    x = IWT_PO(wc,L,qmf)
+  Inputs
+    wc     1-d wavelet transform: length(wc) = 2^J.
+    L      Coarsest scale (2^(-L) = scale of V_0); L << J;
+    qmf    quadrature mirror filter
+  Outputs
+    x      1-d signal reconstructed from wc
+
+  Description
+    Suppose wc = FWT_PO(x,L,qmf) where qmf is an orthonormal quad. mirror
+    filter, e.g. one made by MakeONFilter. Then x can be reconstructed by
+      x = IWT_PO(wc,L,qmf)
+
+  See Also
+    FWT_PO, MakeONFilter
+
+ iwt_po -- Inverse Wavelet Transform (symmetric extension, biorthogonal, symmetric)
+  Usage
+    x = IWT_SBS(wc,L,qmf,dqmf)
+  Inputs
+    wc     1-d wavelet transform: length(wc)= 2^J.
+    L      Coarsest scale (2^(-L) = scale of V_0); L << J;
+    qmf     quadrature mirror filter
+    dqmf    dual quadrature mirror filter (symmetric, dual of qmf)
+  Outputs
+    x      1-d signal reconstructed from wc
+  Description
+    Suppose wc = FWT_SBS(x,L,qmf,dqmf) where qmf and dqmf are orthonormal
+    quad. mirror filters made by MakeBioFilter.  Then x can be reconstructed
+    by
+      x = IWT_SBS(wc,L,qmf,dqmf)
+  See Also:
+    FWT_SBS, MakeBioFilter
+ 
+ IWT_Stat -- Invert Stationary Wavelet Transform
+  Usage
+    x = IWT_Stat(StatWT,L,qmf)
+  Inputs
+    StatWT   stationary wavelet transform table
+    qmf      quadrature mirror filter
+  Outputs
+    x        1-d signal reconstructed from StatWT
+
+  See Also
+    FWT_Stat
+
+ IWT_TI -- Invert translation invariant wavelet transform
+  Usage
+    x = IWT_TI(TIWT,qmf)
+  Inputs
+    TIWT     translation-invariant wavelet transform table
+    qmf      quadrature mirror filter
+  Outputs
+    x        1-d signal reconstructed from translation-invariant
+             transform TIWT
+
+  See Also
+    FWT_TI
+
+ IWT_YM -- Inverse Wavelet Transform (periodized Meyer Wavelet)
+  Usage
+    x = IWT_YM(wc,L,deg)
+  Inputs
+    wc   1-d wavelet transform, length(wc) = 2^J.
+    L    Coarsest Level of V_0;  L << J
+    deg  degree of polynomial window 2 <= deg <=4
+  Outputs
+    x    1-d reconstructed signal; length(x) = 2^J
+
+  Description
+    The Meyer wavelet transform is obtained by the command
+        wc = FWT_YM(x,L,deg)
+    to reconstruct x, use the IWT_YM.
+
+    The Meyer wavelet is defined in the frequency domain.
+    The algorithm is very different from usual quadrature
+    mirror filter algorithms.  See the Ph. D. Thesis of
+    Eric Kolaczyk.
+
+  See Also
+    FWT_YM, CoarseMeyerProj, DetailMeyerProj, FineMeyerProj
+
+ ix2pkt -- Convert linear index to packet table index
+  Usage
+    [d,b,k] = ix2pkt(ix,D,n)
+  Inputs
+    ix     linear position in packet table array
+    D,n    shape of packet table
+  Outputs
+    d,b,k  1-d packet table index
+
+  See Also
+    pkt2ix, packet
+
+ This function is not yet implemented in WaveLab.
+ Find all the real roots of poly. P within the real interval [a,b]
+ LockAxes -- Version-independent axis command
+  Usage
+    LockAxes(a)
+  Inputs
+    a     axis parameter, just as required by axis()
+
+  Side Effects
+    The axes are set to a and held, using a method
+    which works under both v3.5 and v4.0 of MATLAB.
+
+ See Also
+    UnlockAxes, MATLABVERSION
+
+
+ function linim = log2lin(logim,nvoice);
+
+ Description : takes a log-scale image l , and transforms it into
+               a linear scale image n
+
+ Inputs :	logim : logscale image
+              	nvoice : number of voices (default = 1)
+
+ Outputs :	linim : linear scale image
+
+ See also : CWT, ImageCWT
+
+ lshift -- Circular left shift of 1-d signal
+  Usage
+    l = lshift(x)
+  Inputs
+    x   1-d signal
+  Outputs
+    l   1-d signal 
+        l(i) = x(i+1) except l(n) = x(1)
+
+ Make2dCosinePacket -- Create 2d Cosine packet
+  Usage
+    img = Make2dCosinePacket(d,bx,by,kx,ky,D,n)
+  Inputs
+    d,bx,by  quadlet (spatial) index
+    kx,ky    cosine frequency index within quadlet
+    D        maximum depth of splitting (D >= d)
+    n        desired image extent (e.g. 128)
+  Outputs
+    img      2-d image, n by n
+
+  Description
+    Create the basis element corresponding to location
+    (d,bx,by,kx,ky) within the CP table of depth D for
+    an n by n image.
+
+ Make2dSignal -- Make artificial 2d signal
+  Usage
+    sig = Make2dSignal(Name,n[,par])
+  Inputs
+    Name   string, one of:
+      'Backgammon'
+      'BoxWithCross'    (par = length of side [n/2])
+      'Checkerboard'
+      'Circle'          (par = radius [n/4])
+      'FigureEight'
+      'Mondrian'        (par = number [10])		
+      'OvalDiagonal'    (par = major/minor axes ratio [2])
+      'OvalHorizontal'  (par = major/minor axes ratio [2])
+      'OvalVertical'    (par = major/minor axes ratio [2])
+      'StickFigure'
+      'Triangle'
+      'VanishingPoint'
+    n                   desired signal dimension
+    par                 optional parameter, defaults in []'s above
+  Outputs
+    img                 n by n image
+
+ Make2dWavelet -- Make 2-d Wavelet
+  Usage
+    wave2d = Make2dWavelet(j,k1,k2,ep[,Family,par,n])
+  Inputs
+    j        resolution level
+    k1,k2    spatial indices
+    ep       spatial orientation
+             ep = 0:  Father(x)Father(y)
+                  1:  Mother(x)Father(y)
+                  2:  Father(x)Mother(y)
+                  3:  Mother(x)Mother(y)
+    Family   string: 'Haar', 'Daubechies', 'Coiflet', 'Symmlet', 'Meyer'
+             Default: 'Symmlet', Nearly-Symmetric ON Wavelet
+    par      integer parameter to MakeONFilter, etc.
+             When Default 'Symmlet' active, default 8.
+    n        image side length (dyadic)
+  Outputs
+    wave2d   2-d image, the wavelet
+
+ Make2dWaveletPacket -- Create 2d Wavelet Packet
+  Usage
+    img = Make2dWaveletPacket(d,bx,by,kx,ky[,n,qmf])
+    img = Make2dWaveletPacket(d,bx,by,kx,ky[,n,Family,par])
+  Inputs
+    d,bx,by  quadlet (frequency) index
+    kx,ky    spatial frequency index within quadlet
+    n        desired image extent     (default 128)
+    qmf      quadrature mirror filter
+    Family	  name of wavelet filter   (default 'Symmlet')
+    par      parameter of filter      (default 8)
+  Outputs
+    img      2-d image, n by n
+
+  Description
+    Create the basis element corresponding to location
+    (d,bx,by,kx,ky) within the WP table of depth D for
+    an n by n image, filtered by the filter qmf.
+
+ MakeAIBdryFilter -- Edge filters for Average-Interpolating Wavelets
+  Usage
+    EdgeFilt = MakeAIBdryFilter(D)
+  Inputs
+    D         Degree of polynomial for average-interpolation.
+              Must be an even integer.
+  Outputs
+    EdgeFilt  Edge Filter suitable for use by
+              AIRefine, FWT_AI, IWT_AI, AIRefine2d, etc.
+  Description
+    Calculates average-interpolating filters of various orders
+    which may be used with FWT_AI and related tools.
+
+  See Also
+    AIRefine, FWT_AI, AIRefine2d
+
+ MakeAIFilter --  Filters for Average-Interpolating Wavelets
+  Usage
+    Filt = MakeAIFilter(D)
+  Inputs
+    D         Degree of polynomial for average-interpolation.
+              Must be an even integer.
+  Outputs
+    Filt      Average-Interpolating Filter suitable for use by
+              AIRefine, FWT_AI, IWT_AI, AIRefine2d, etc.
+
+  Description
+    Calculates average-interpolating filters of various orders
+    which may be used with FWT_AI and related tools.
+
+  See Also
+    AIRefine, FWT_AI, AIRefine2d
+
+
+ MakeATrouFilter -- Generate Biorthonormal Quadratic Spline Filter Pair
+
+  Usage
+    [lodyadf,dlodyadf,hidyadf,dhidyadf] = MakeATrouFilter(Type,Par)
+  Inputs
+    Type   string, one of:
+		'Spline'
+    Par    Par = 3 only
+
+ Outputs
+    lodyadf 	low-pass dyadic filter
+    dlodyadf   dual low-pass dyadic filter
+    hidyadf	high-pass dyadic filter
+    dhidyadf   dual high-pass dyadic filter
+ MakeBasis -- Create a basis tree for a standard basis
+  Usage
+    btree = MakeBasis(n,btype,par)
+  Inputs
+    n        dimension of basis
+    btype    string, one of 'Dirac', 'QuasiDCT', 'Gabor' or 'Wavelet'
+    par      if 'Gabor', which splitting level
+  Outputs
+    btree    basis tree, as produced by BestBasis, for example
+
+  Description
+    The 'Dirac' basis corresponds to the original signal in the wavelet
+    packets table, and to the Fourier transform of the signal in the cosine
+    packets table.  In either case, no splitting is performed.
+
+    'QuasiDCT' refers to complete splitting (i.e. the last row) in the
+    wavelet packets table.  This splitting is done in frequency, hence the
+    name 'QuasiDCT.'
+
+    'Gabor' refers to equal splitting, left and right, up to a certain row
+    in either the wavelet or cosine packets table.
+ 
+    'Wavelet' corresponds to the standard wavelet basis in the wavelet
+    packets table, i.e. continued splitting of the low-pass output.
+
+
+  See Also
+    BestBasis, PlotBasisTree
+
+ MakeBrownian -- Create Fractional Brownian Signal
+  Usage
+    fBr = MakeBrownian(n,H,par)
+  Inputs
+    n       signal length
+    H       base of digits in expansion
+    par     optional, degree of extension in algorithm, default =8.
+  Outputs
+    fBr     (pseudo) Fractional Brownian signal
+
+  Description
+    Uses a Frequency Domain algorithm to get a pseudo Brownian Motion
+    The law is NOT normalized to give unit variance to unit increments.
+
+ MakeBSFilter -- Generate Biorthonormal QMF Filter Pairs
+  Usage
+    [qmf,dqmf] = MakeBSFilter(Type,Par)
+  Inputs
+    Type   string, one of:
+             'Triangle'
+             'Interpolating' 'Deslauriers' (the two are same)
+             'Average-Interpolating'
+             'CDF' (spline biorthogonal filters in Daubechies's book)
+             'Villasenor' (Villasenor's 5 best biorthogonal filters)
+    Par    integer list, e.g. if Type ='Deslauriers', Par=3 specifies
+           Deslauriers-Dubuc filter, polynomial degree 3
+  Outputs
+    qmf    quadrature mirror filter  (odd length, symmetric)
+    dqmf   dual quadrature mirror filter  (odd length, symmetric)
+
+  See Also
+    FWT_PBS, IWT_PBS, FWT2_PBS, IWT2_PBS
+
+  References
+    I. Daubechies, "Ten Lectures on Wavelets."
+    
+    G. Deslauriers and S. Dubuc, "Symmetric Iterative Interpolating Processes."
+
+    D. Donoho, "Smooth Wavelet Decompositions with Blocky Coefficient Kernels."
+ 
+    J. Villasenor, B. Belzer and J. Liao, "Wavelet Filter Evaluation for
+    Image Compression."
+
+ MakeWavelet -- Make periodized orthogonal wavelet
+  Usage
+    wave = MakeWavelet(j,k [,Family,par,Gender,n])
+  Inputs
+    j,k      location-scale indices: 2^{-j} approx width of wavelet
+             k/2^j approx loc'n of wavelet on unit interval
+    Family   string: 'CDF'
+    par      a vector of length 3 
+             (first 2 coord: normal parameters, 
+             3rd coord: 1 -> dual biorthogonal wavelet and 
+                        0 -> biorthogonal wavelet)
+    Gender   'Mother', 'Father'
+    n        signal length (dyadic)
+  Outputs
+    wave     1-d signal, the wavelet
+
+   x = MakeCantor(x,n1,n2,p,a1,a2,b1,b2);
+   Description :
+     recursively generates a Cantor distribution.
+   Inputs :
+	x 	signal of size n, (initialized by x = zeros(1,n))
+	n1 	left border (initialized by 1)
+  	n2	right border (initialized by n)
+	a1,a2	first and second cutting position (for example 1/3 and 2/3)
+  	b1,b2	weights to apply on [n1,a1] and [a2,n2]
+ MakeCDJVFilter --  Set up filters for CDJV Wavelet Transform
+  Usage
+    [a,b,c] = MakeCDJVFilter(request,degree)
+  Inputs
+    request  string: 'HighPass', 'LowPass', 'Precondition', 'Postcondition'
+    degree   integer: 2 or 3 (number of vanishing moments)
+  Outputs
+    a,b,c    filter, left edge filter, right edge filter
+             ('HighPass', 'LowPass')
+    a        conditioning matrix ('Precondition', 'Postcondition')
+
+  Description
+    CDJV have developed an algorithm for wavelets on the interval which
+    preserves the orthogonality, vanishing moments, smoothness, and compact
+    support of Daubechies wavelets on the line.
+
+    The algorithm for wavelets on the interval of CDJV involves four objects
+    not present in the usual periodized algorithm: right edge filters, left
+    edge filters, and pre- and post- conditioning operators.
+
+    These objects are supplied by appropriate requests to MakeCDJVFilter.
+
+  See Also
+    IWT_CDJV, FWT_CDJV, CDJVDyadDown
+
+  References
+    Cohen, Daubechies, Jawerth and Vial, 1992.
+
+ MakeCosinePacket -- Make Cosine Packet signal
+  Usage
+    cospkt = MakeCosinePacket(d,b,k[,Bell,D,n])
+  Inputs
+    d,b,k    1-d packet index
+    Bell     bellname  e.g. 'Sine'
+    D        D >= d; default =d.
+    n        signal length (n >> 2^d; default 2^(d+5))
+  Outputs
+    cospkt   1-d signal; the requested cosine packet
+
+  Description
+    This function returns the cosine packet basis element
+    corresponding to position (d,b,k) in the CP table.
+
+  See Also
+    CPAnalysis, CPSynthesis, CPImpulse
+
+ MakeDDBdryFilter -- Edge filters, Interpolating (Deslauriers-Dubuc) Refinement
+  Usage
+    [LEFilt,REFilt] = MakeDDBdryFilter(D)
+  Inputs
+    D         Degree of polynomial for interpolation.
+              Must be an odd integer >= 3.
+  Outputs
+    LEFilt    Left Edge Interpolating Filter
+    REFilt    Right Edge Interpolating Filter
+
+  Description
+    Calculates interpolating filters of various orders
+    which may be used with FWT_DD and related tools.
+
+  See Also
+    DDRefine, FWT_DD, IWT_DD
+
+ MakeDDFilter -- Filter for interpolating (Deslauriers-Dubuc) Refinement
+  Usage
+    Filt = MakeDDFilter(D)
+  Inputs
+    D         Degree of polynomial for interpolation.
+              Must be an odd integer >= 3.
+  Outputs
+    Filt      Interpolating Filter suitable for use by
+              DDRefine, FWT_DD, IWT_DD,  etc.
+
+  Description
+    Calculates interpolating filters of various orders
+    which may be used with FWT_DD and related tools.
+
+  See Also
+    DDRefine, FWT_DD, IWT_DD
+
+ makediag -- Make a diagonal pattern
+  Usage
+    im = makediag(m,n)
+ Inputs
+    m,n  size of desired image
+ Outputs
+    im   m by n image
+
+ MakeDyadFilter -- Generate Biorthonormal Quadratic Spline Filter Pair
+
+  Usage
+    [lodyadf,dlodyadf,hidyadf,dhidyadf] = MakeDyadFilter(Type,Par)
+  Inputs
+    Type   string, one of:
+		'Spline'
+    Par    Par = 3 only
+
+ Outputs
+    lodyadf 	low-pass dyadic filter
+    dlodyadf   dual low-pass dyadic filter
+    hidyadf	high-pass dyadic filter
+    dhidyadf   dual high-pass dyadic filter
+ MakeFractal -- Create Random or Deterministic Self-Similar signal
+  Usage
+    Frac = MakeFractal(n,base,type,prob)
+  Inputs
+    n       signal length
+    base    base of digits in expansion
+    type    string 'rand' or 'detrministic'
+    prob    vector of base numbers with sum = 1   
+  Outputs
+    Frac    Self-Similar signal
+
+  Description
+    To get (a discrete approximation to) a Cantor Set,
+    use base=3, type ='deterministic', prob = [.5 0 .5]
+
+    To get the random self-similar signal in Arneodo & Co.
+    use base=4, type = 'random', prob = [.69, -.46, .46, .31]
+
+ MakeImage -- Make artificial 2d signal
+  Usage
+    sig = MakeImage(Name,n[,par])
+  Inputs
+    Name   string, one of:
+      'Backgammon'
+      'BoxWithCross'    (par = length of side [n/2])
+      'Checkerboard'
+      'Circle'          (par = radius [n/4])
+      'FigureEight'
+      'Mondrian'        (par = number [10])		
+      'OvalDiagonal'    (par = major/minor axes ratio [2])
+      'OvalHorizontal'  (par = major/minor axes ratio [2])
+      'OvalVertical'    (par = major/minor axes ratio [2])
+      'StickFigure'
+      'Triangle'
+      'VanishingPoint'
+      'Square'
+    n                   desired signal dimension
+    par                 optional parameter, defaults in []'s above
+  Outputs
+    img                 n by n image
+
+ MakeOBFilter --  Makes Orthogonal Boundary conjugate mirror filters 
+		   of Cohen-Daubechies-Jawerth-Vial
+  Usage
+    [a,b,c] = MakeOBFilter(request,degree)
+  Inputs
+    request  string: 'HighPass', 'LowPass', 'Precondition', 'Postcondition'
+    degree   integer: 2 or 3 (number of vanishing moments)
+  Outputs
+    a,b,c    filter, left edge filter, right edge filter
+             ('HighPass', 'LowPass')
+    a        conditioning matrix ('Precondition', 'Postcondition')
+
+  Description
+    CDJV have developed an algorithm for wavelets on the interval which
+    preserves the orthogonality, vanishing moments, smoothness, and compact
+    support of Daubechies wavelets on the line.
+
+    The algorithm for wavelets on the interval of CDJV involves four objects
+    not present in the usual periodized algorithm: right edge filters, left
+    edge filters, and pre- and post- conditioning operators.
+
+    These objects are supplied by appropriate requests to MakeCDJVFilter.
+
+  See Also
+    IWT_IO, FWT_IO, CDJVDyadDown
+
+  References
+    Cohen, Daubechies, Jawerth and Vial, 1992.
+    Mallat's book, section 7.5.3
+
+ MakeONBell -- Make Bell for Orthonormal Local Cosine Analysis
+  Usage
+    [bp,bm] = MakeONBell(bell,m)
+  Inputs
+    bell      bellname, currently 'Trivial','Sine'
+    m         length of bell
+  Outputs
+    bp        part of bell interior to domain
+    bm        part of bell exterior to domain
+
+ See Also
+    CPAnalysis, CPSynthesis, MakeCosinePacket
+
+ MakeONFilter -- Generate Orthonormal QMF Filter for Wavelet Transform
+  Usage
+    qmf = MakeONFilter(Type,Par)
+  Inputs
+    Type   string, 'Haar', 'Beylkin', 'Coiflet', 'Daubechies',
+           'Symmlet', 'Vaidyanathan','Battle'
+    Par    integer, it is a parameter related to the support and vanishing
+           moments of the wavelets, explained below for each wavelet.
+
+ Outputs
+    qmf    quadrature mirror filter
+
+  Description
+    The Haar filter (which could be considered a Daubechies-2) was the
+    first wavelet, though not called as such, and is discontinuous.
+
+    The Beylkin filter places roots for the frequency response function
+    close to the Nyquist frequency on the real axis.
+
+    The Coiflet filters are designed to give both the mother and father
+    wavelets 2*Par vanishing moments; here Par may be one of 1,2,3,4 or 5.
+
+    The Daubechies filters are minimal phase filters that generate wavelets
+    which have a minimal support for a given number of vanishing moments.
+    They are indexed by their length, Par, which may be one of
+    4,6,8,10,12,14,16,18 or 20. The number of vanishing moments is par/2.
+
+    Symmlets are also wavelets within a minimum size support for a given 
+    number of vanishing moments, but they are as symmetrical as possible,
+    as opposed to the Daubechies filters which are highly asymmetrical.
+    They are indexed by Par, which specifies the number of vanishing
+    moments and is equal to half the size of the support. It ranges 
+    from 4 to 10.
+
+    The Vaidyanathan filter gives an exact reconstruction, but does not
+    satisfy any moment condition.  The filter has been optimized for
+    speech coding.
+
+    The Battle-Lemarie filter generate spline orthogonal wavelet basis.
+    The parameter Par gives the degree of the spline. The number of 
+    vanishing moments is Par+1.
+
+  See Also
+    FWT_PO, IWT_PO, FWT2_PO, IWT2_PO, WPAnalysis
+
+  References
+    The books by Daubechies and Wickerhauser.
+
+ x = MakeProcess(NR,N);
+ Description :
+   Generates NR locally stationary process realizations
+    by filtering a white noise (z) through a slowly varying filter (kernel);
+   The filtering is done by convolution in the time-domain. 
+
+ Inputs
+	NR  : number of realizations
+       N   : size of signal
+
+ Outputs
+  	x   : N*NR matrix containing NR realizations of a 
+             locally stationary process
+
+
+ MakeSignal -- Make artificial signal
+  Usage
+    sig = MakeSignal(Name,n)
+  Inputs
+    Name   string: 'HeaviSine', 'Bumps', 'Blocks',
+            'Doppler', 'Ramp', 'Cusp', 'Sing', 'HiSine',
+            'LoSine', 'LinChirp', 'TwoChirp', 'QuadChirp',
+            'MishMash', 'WernerSorrows' (Heisenberg),
+            'Leopold' (Kronecker), 'Piece-Regular' (Piece-Wise Smooth),
+	     'Riemann','HypChirps','LinChirps', 'Chirps', 'Gabor'
+	     'sineoneoverx','Cusp2','SmoothCusp','Gaussian'
+	     'Piece-Polynomial' (Piece-Wise 3rd degree polynomial)
+    n      desired signal length
+  Outputs
+    sig    1-d signal
+
+  References
+    Various articles of D.L. Donoho and I.M. Johnstone
+
+ MakeSynthesisTable -- Convert atom list to packet table
+  Usage
+    spkt = MakeSynthesisTable(atomic,pkt)
+  Inputs
+    atomic     atoms from wavelet packet or cosine packet table
+    pkt        packet table (only the shape is used)
+  Outputs
+    spkt       packet table filled with coefficients from atom list  
+
+ MakeTiledFigures -- Tile the screen with figures
+  Usage
+    [h1,h2] = MakeTiledFigures(2,format);
+    [h1,h2,h3] = MakeTiledFigures(3,format);
+    [h1,h2,h3,h4] = MakeTiledFigures(4,format);
+  Inputs
+    nfig          number of figure windows to create
+    format        string,  '|' or '-'   for nfig=2
+                           '|-' or '-|' for nfig=3
+                           '+'          for nfig=4
+  Outputs
+    h1,h2,h3,h4   handles for each figure window created
+
+  Description
+    An array of figure windows is created, tiling the screen
+
+         Possible Layouts (nfig,format label beneath each)
+
+     |---|---|   |-------|   |---|---|   |---|---|   |---|---|
+     |   |   |   |       |   |   |   |   |   |   |   |   |   |
+     |   |   |   |-------|   |   |---|   |---|   |   |---|---|
+     |   |   |   |       |   |   |   |   |   |   |   |   |   |
+     |---|---|   |-------|   |---|---|   |---|---|   |---|---|
+       2,'|'        2,'-'      3,'|-'      3,'-|'      4,'+'
+
+ MakeWavelet -- Make periodized orthogonal wavelet
+  Usage
+    wave = MakeWavelet(j,k [,Family,par,Gender,n])
+  Inputs
+    j,k      location-scale indices: 2^{-j} approx width of wavelet
+             k/2^j approx loc'n of wavelet on unit interval
+    Family   string: 'Haar', 'Daubechies', 'Coiflet', 'Symmlet',
+             'Interpolating', 'AverageInterpolating', 'Meyer', 'Battle'
+             Default: 'Symmlet', Nearly-Symmetric ON Wavelet
+    par      integer parameter to MakeONFilter, MakeDDFilter. 
+             When Default 'Symmlet' active, default 8.
+
+    Gender   'Mother', 'Father'
+    n        signal length (dyadic)
+  Outputs
+    wave     1-d signal, the wavelet
+
+  Description
+    The Haar filter (which could be considered a Daubechies-2) was the
+    first wavelet, though not called as such, and is discontinuous.
+
+    The Coiflet filters are designed to give both the mother and father
+    wavelets 2*Par vanishing moments; here Par may be one of 1,2,3,4 or 5.
+
+    The Daubechies filters are minimal phase filters that generate wavelets
+    which have a minimal support for a given number of vanishing moments.
+    They are indexed by their length, Par, which may be one of
+    4,6,8,10,12,14,16,18 or 20. The number of vanishing moments is par/2.
+
+    Symmlets are also wavelets within a minimum size support for a given 
+    number of vanishing moments, but they are as symmetrical as possible,
+    as opposed to the Daubechies filters which are highly asymmetrical.
+    They are indexed by Par, which specifies the number of vanishing
+    moments and is equal to half the size of the support. It ranges 
+    from 4 to 10.
+
+    The Battle-Lemarie filter generate spline orthogonal wavelet basis.
+    The parameter Par gives the degree of the spline. The number of 
+    vanishing moments is Par+1.
+
+    The Meyer wavelet has an infinite number of vanishing moments. The time
+    decay  depends upon the regularity of the spectral window used to build
+    it. In this case, these windows are built with polynomials whose degree
+    are given by the parameter Par.
+
+    The Interpolating wavelets are Dubuc-Deslauriers wavelets which are
+    interpolating functions that can reproduce polynomials of degree
+    equal to Par.
+
+ MakeWaveletPacket -- Make periodized orthogonal wavelet packet
+  Usage
+    wavepkt = MakeWaveletPacket(d,b,k[,Family,par,n])
+    wavepkt = MakeWaveletPacket(d,b,k,qmf[,n])
+  Inputs
+    d,b,k     1-d packet index
+    Family    Wavelet Family name  (Default 'Symmlet')
+    par       Family Parameter     (Default 8)
+    qmf       quadrature mirror filter
+    n         signal length        (>> 2^d)
+  Outputs
+    wavepkt   1-d signal; the requested wavelet packet
+
+  Description
+    This function returns the wavelet packet basis element
+    corresponding to position (d,b,k) in the WP table.
+
+  See Also
+     WPAnalysis, WPSynthesis
+
+ MakeWindow -- Make artificial Window
+  Usage
+    wig = MakeWindow(Name,n)
+  Inputs
+    Name   string: 'Rectangle', 'Hanning', 'Hamming',
+            'Gaussian', 'Blackman';
+    n      desired half Window length
+  Outputs
+    win    1-d Window, with length 2n+1;
+  Description
+    Rectangle		1
+    Hanning 		cos(pi*t)^2
+    Hamming		.54 + .46cos(2pi*t)
+    Gaussian		exp(-18 * t^2/2)
+    Blackman		.42 + .50*cos(2pi*t) + .08cos(4.*pi.*t)
+  Examples
+     win = MakeWindow('Rectangle',17);	plot(win);
+     win = MakeWindow('Hanning',  17);	plot(win);
+     win = MakeWindow('Hamming',  17);	plot(win);
+     win = MakeWindow('Gaussian', 17);	plot(win); 
+     win = MakeWindow('Blackman', 17);	plot(win);
+  See Also
+
+  Algorithm
+    Easy to implement.
+  References
+    Mallat, "A Wavelet Tour of Signal Processing"; 4.2.2 Choice of Window.
+
+ Mat2SparseNSForm -- Put Matrix into Sparse Nonstandard Form
+  Usage
+    NS = Mat2SparseNSForm(M,L,qmf,epsilon)
+  Inputs
+    M        Matrix to be be put in Sparse Nonstandard Form, 
+             (n by n array, n dyadic)
+    L        Coarsest Resolution Level
+    qmf      quadrature Mirror Filter
+    epsilon  Truncation Criterion
+  Outputs
+    NS       sparse nonstandard form of matrix, 2n by 2n
+
+  Description
+    The matrix M is transformed into the wavelet basis.
+    Then it is stretched into nonstandard form.
+    Elements exceeding epsilon * maximum column norm
+    are set to zero.  NS is the resulting sparse matrix.
+    NS can be used as input to NonStdWaveMult.
+
+  See Also
+    NonStdWaveMult, Mat2SparseSForm, FSFT_PO
+
+ Mat2SparseSForm -- Put Matrix into Sparse Standard Form
+  Usage
+    S = Mat2SparseSForm(M,L,qmf,epsilon)
+  Inputs
+    M        Matrix to be be put in Sparse Standard Form
+    L        Coarsest Resolution Level
+    qmf      quadrature Mirror Filter
+    epsilon  Truncation Criterion
+  Outputs
+    S        sparse standard form of matrix
+
+  Description
+    The matrix M is transformed into the wavelet basis.
+    Elements exceeding epsilon * maximum column norm
+    are set to zero.  S is the resulting sparse matrix.
+    S can be used as input to StdWaveMult.
+
+  See Also
+    StdWaveMult, Mat2SparseNSForm, FSTF_PO
+
+ MedianInterp -- Perform Polynomial Interpolation of Block Medians
+  Usage
+    P = MedianInterp(blockmedians)
+  Inputs
+    blockmedians vector of length N
+  Outputs
+    P            Polynomial that fits the block medians:
+                 blockmedian(i+1)=median(P|[i,i+1]), i=0,1,...,(N-1)
+  Example
+    P = MedianInterp([1 2 3 2 4]) gives a 4th degree poly. with block the
+    desired medians. With the error tolerence EPS = 10^8, the algorithm 
+    computes the median-interpolant in 13 iterations.
+    
+ MedITriadDown -- Med Triad Down
+  Usage
+    [smooth,rough] = MedITriadDown(x,j,D)
+ 
+ MedITriadUp -- Med Triad Up
+  Usage
+    MedITriadUp(smooth,rough)
+
+ MinMaxThresh -- Minimax Thresholding
+  Usage
+    x = MinMaxThresh(y)
+  Inputs
+    y   signal upon which to perform thresholding
+  Outputs
+    x   result
+
+  References
+    ``Ideal Spatial Adaptation via Wavelet Shrinkage''
+    by D.L. Donoho and I.M. Johnstone.
+
+ MirrorFilt -- Apply (-1)^t modulation
+  Usage
+    h = MirrorFilt(l)
+  Inputs
+    l   1-d signal
+  Outputs
+    h   1-d signal with DC frequency content shifted
+        to Nyquist frequency
+
+  Description
+    h(t) = (-1)^(t-1)  * x(t),  1 <= t <= length(x)
+
+  See Also
+    DyadDownHi
+
+ MirrorSymmFilt -- apply (-1)^t modulation to symmetric filter
+  Usage
+    h = MirrorSymmFilt(l)
+  Inputs
+    l   symmetric filter
+  Outputs
+    h   symmetric filter with DC frequency content shifted
+        to Nyquist frequency
+
+  Description
+    h(t) = (-1)^t  * x(t),  -k <= t <= k ; length(x)=2k+1
+
+  See Also
+    DownDyadHi_PBS
+
+ The forward dyadic wavelet trasnsform with the Algorithme a
+ trous is not yet implemented in Wavelab. It is implemented in the
+ LastWave software, which is available on the Internet at
+ http://www.cmap.polytechnique.fr/users/www.bacry
+ MM_RWT -- Modulus Maxima of a Real Wavelet Transform
+  Usage
+    maxmap = MM_RWT(rwt,par)
+  Inputs
+    rwt    Output of RWT
+    par    optional. If present, keep thresholds only
+           above a certain value. default = 1000
+  Outputs
+    maxmap binary array indicating presence of max or not
+
+  Description
+    Used to calculate fractal exponents etc. 
+
+ MonitorPursuit -- Display intermediate Pursuit progress
+  Usage
+    new_res = MonitorPursuit(type,nuc,t,amax,res,dp,D,pktype)
+
+  Description
+    Utility used by WPPursuit & CPPursuit. Not intended for other use.
+
+ MultiHybrid -- Apply Shrinkage to Wavelet Coefficients
+  Usage 
+    ws = MultiHybrid(wc,L)
+  Inputs 
+    wc    Wavelet Transform of noisy sequence with N(0,1) noise
+    L     low-frequency cutoff for Wavelet Transform
+  Outputs 
+    ws    result of applying HybridThresh to each dyadic block
+
+ MultiMAD -- Apply Shrinkage with level-dependent Noise level estimation
+  Usage 
+    s = MultiMAD(wc,L)
+  Inputs 
+    wc    Wavelet Transform of noisy sequence
+    L     low-resolution cutoff for Wavelet Transform
+  Outputs 
+    ws    result of applying VisuThresh to each wavelet level,
+          after scaling so MAD of coefficienst at each level = .6745 
+
+ MultiSURE -- Apply Shrinkage to Wavelet Coefficients
+  Usage 
+    ws = MultiSURE(wc,L)
+  Inputs 
+    wc    Wavelet Transform of noisy sequence with N(0,1) noise
+    L     low-frequency cutoff for Wavelet Transform
+  Outputs 
+    ws    result of applying SUREThresh to each dyadic block
+
+ MultiVisu -- Apply sqrt(2log(n)) Thresholding to Wavelet Coefficients
+  Usage
+    ws = MultiVisu(wc,L)
+  Inputs 
+    wc    Wavelet Transform of noisy sequence with N(0,1) noise
+    L     low-frequency cutoff for Wavelet Transform
+  Outputs 
+    ws    result of applying VisuThresh to each High Frequency
+          Dyadic Block
+
+ ndyad -- Index dyad of nonstandard wavelet transform
+  Usage
+    ix = ndyad(j,gender)
+  Inputs
+    j       dyad index
+    gender  (1 = female, 0 = male)
+  Outputs
+    ix      vector of subscripts of all coefficients
+            at j-th level attached to wavelets of indicated gender
+
+  See Also
+    FNWT_PO, INWT_PO, dyad
+
+ node -- Tree indexing function
+  Usage
+    index = node(d,b)
+  Inputs
+    d        depth from root of tree
+    b        index among the 2^d possibilities
+             in a left-right scan at that depth
+  Outputs
+    index    linear index of node in tree structure
+
+ NonStdWaveMult -- Nonstandard Wavelet Matrix Multiplication
+  Usage
+    y = NonStdWaveMult(NS,x,L,qmf)
+  Inputs
+    NS        Matrix in Nonstandard form
+    x         vector in natural basis
+    L         Coarsest Resolution level of Wavelet Transform
+    qmf       quadrature mirror filter (orthogonal)
+  Outputs
+    y         Result of nonstandard multiplication
+
+  Description
+    If M is a matrix, there are two ways to compute y = M*x.  The first
+    is to use MATLAB to do the product as just written.  This algorithm 
+    works in order n^2 time, where n is the problem size.
+
+    The second is to transform both the matrix and vector to their
+    nonstandard forms and multiply the nonstandard forms.  If the matrix
+    is sparse in nonstandard form, this can be an order n algorithm.
+ 
+ NormNoise -- Estimates noise level, Normalize signal to noise level 1
+  Usage
+    [y,coef] = NormNoise(x,qmf)
+  Inputs
+    x     1-d signal
+    qmf   quadrature mirror filter
+  Outputs
+    y     1-d signal, scaled so wavelet coefficients
+          at finest level have median absolute deviation 1.
+    coef  estimation of 1/sigma
+
+  Description
+    This is required pre-processing to use any of the DeNoising
+    tools on naturally-occurring data.
+
+  See Also
+    WaveShrink, CPDeNoise,WPDeNoise
+
+ PackBasisCoeff -- Stuff basis coefficients into packet table
+  Usage
+    pkt = PackBasisCoeff(btree,opkt,x)
+  Inputs
+    btree     basis tree selecting basis the coefficients come from
+    opkt      wavelet or cosine packet table
+    x         1-d signal; coefficients in the basis of btree
+  Outputs
+    pkt       new packet table with coefficients in specified
+              basis filled in from x
+
+  Description
+    Fill the packet table coefficients specified
+    by the basis tree btree with the contents of x.
+
+ packet -- Packet table indexing
+  Usage
+    p = packet(d,b,n)
+  Inputs
+    d     depth of splitting in packet decomposition
+    b     block index among 2^d possibilities at depth d
+    n     length of signal
+  Outputs
+    p     linear indices of all coeff's in that block
+
+ PackShiftCoeff --  stuff shifted coefficients into packet table
+  Usage
+    TIWT = PackShiftCoeff(path,oTI,c,renorm)
+  Inputs
+    path     tree selecting circulant shift
+    oTI      translation invariant transform table (e.g. from FWT_TI)
+    c        coefficients at circulant shift
+    renorm   optional; if =1, scale coefficients by 2^d factor
+  Outputs
+    TIWT     new translation invariant table with coefficients in
+             specified path filled in from c
+
+  Description
+    Fill the packet table coefficients specified by the shift path
+    with the contents of c.
+
+  See Also
+    UnpackShiftCoeff, BestShift
+
+ PadDyad -- Zero-fill signal to Dyadic length
+  Usage
+    dyad_sig = PadDyad(sig)
+  Inputs
+    sig        a row or column vector
+  Outputs
+    dyad_sig   a vector of dyadic length
+               with contents taken from sig
+
+  See Also
+    CutDyad
+
+ pkt2ix -- Convert packet table index to linear index
+  Usage
+    [row,ix] = pkt2ix(d,b,k,D,n)
+  Inputs
+    d,b,k   1-d packet table index
+    D,n     shape of packet table
+  Outputs
+    ix      linear position in packet table
+    row     row in packet table
+
+  See Also
+    ix2pkt, packet
+
+ Plot2dBasisTree -- Show quad tree of best basis
+  Usage
+    Plot2dBasisTree(basis,stat_tree,D,n)
+  Inputs
+    basis     quadtree specifying basis
+    stat_tree quadtree of entropy statistics 
+    D         maximum depth of tree
+    n         extent of original object
+
+  Description
+    Produce a mesh surface plot with the height of a rectangular block
+    equal to the entropy drop by splitting.
+
+  See Also
+    PlotBasisTree,  Calc2dTreeHeight
+
+ Plot2dPartition -- Show partition of Time/Freq plane by best basis
+  Usage
+    Plot2dPartition(basis,color,ax,D)
+  Inputs
+    basis    quadtree specifying partition of time
+             or frequency plane
+    color    string, e.g. 'y'
+    ax       axis parameter of plot this should be overlaid on
+    D        maximum deoth of splitting
+
+  Side Effects
+    Unless a ``hold on'' command is performed, this function will
+    overwrite the current graphics window.
+
+  Description
+    Plot a 2d partition corresponding to the decomposition
+    of the spatial variable.
+
+  Examples
+    The code fragment:
+
+       GrayImage(img); hold on; 
+       stat  = Calc2dStatTree('CP',img,5,'Entropy',[]);
+       basis = Best2dBasis(stat,5);
+       Plot2dPartition(basis,'y',[1 256 1 256],5);
+
+    will overlay on a gray-scale display of img the partition
+    corresponding to the best decomposition of the spatial variable.
+
+ PlotAIMultiRes -- Average-Interpolating MRA
+  Usage
+    PlotAIMultiRes(wc,L,scal,D)
+  Inputs
+    wc    1-d wavelet transform
+    L     level of coarsest scale
+    scal  scale factor [0 ==> autoscale]
+    D     Degree of AI filter used to make wc
+
+  Side Effects
+    A depiction of the multi-resolution decomposition
+    of the signal, as in S. Mallat.
+
+  See Also
+    PlotWaveCoeff, FWT_AI, IWT_AI, MakeAIFilter
+
+ PlotAtomicPhase -- Plot time-frequency content of atom list
+  Usage
+    PlotAtomicPhase(atomlist,n[,titlestr]) 
+  Inputs
+    TFType       string indicating type of TF atoms: 'CP' or 'WP'   
+    atomlist     atom list, e.g. as produced by CPPursuit or WPPursuit
+    n            signal length
+    titlestr     signal name (optional)
+
+  Side Effects
+    A plot of Time-Frequency Plane, with rectangles showing Heisenberg
+    cells of the atoms making a significant contribution.
+
+ PlotBasisTree -- Display basis tree with decorated branch lengths
+  Usage
+    PlotBasisTree(btree,D,stree[,titlestr])
+  Inputs
+    btree      basis tree (e.g. output of BestBasis)
+    D          max depth of tree
+    stree      stat tree of pkt table
+    titlestr   optional signal title
+
+  Side Effects
+    A plot of tree with height of each branch proportional
+    to improvement in cost function obtained by splitting.
+
+ PlotCoeffComparison -- Compare coefficients in various bases
+  Usage
+    PlotCoeffComparison(wp,wp_stree,cp,cp_stree,titlestr)
+  Inputs
+    wp          Wavelet Packet table,
+    wp_stree    Wavelet Packet Stat tree
+    cp          Cosine Packet table
+    cp_stree    Cosine Packet Stat tree
+    titlestr    title for plot
+
+  Description
+    Make plots to compare the signal representations via
+    both Cosine Packets and Wavelet packets. 
+ 
+  Side Effects
+    For both Wavelet Packets and Cosine Packets:
+       coeff plot, best level
+       sorted coeff plot, best basis
+       printout, entropies best level, best basis
+
+ PlotColumns -- Plot each Column of input matrix
+  Usage
+    PlotColumns(matrix,starting,ABS,GlobalScale);
+  Inputs
+    matrix  	input matrix
+    starting   starting position of figures, 1 or 2
+    ABS        take absolute value[1] or not[0]
+    GlobalScale	if use global scale[1] or not[0], default = 0;
+  Side Effects
+    generate a figure with plot for each column
+  Description
+    Utility function;
+  Algorithm
+     
+  Examples
+    test = rand(1024,5) - .5;
+    clf; PlotColumns(test)  
+    starting = 2; 
+    clf; PlotColumns(test,starting)
+    ABS = 1;
+    clf; PlotColumns(test,starting,ABS)
+    GlobalScale = 1;
+    clf; PlotColumns(test,starting,ABS,GlobalScale)
+  See Also
+    DisplayDWT.m 
+  References
+    
+ PlotCompressNumbers -- Plot Compression Numbers
+  Usage
+    PlotCompressNumbers(coef,signaltitle)
+  Inputs
+    coef           array of coefficients
+    signaltitle    title for plot  
+
+  Side Effects
+    A plot showing the compression curve for the given coeffs.
+
+  Description
+    Compression numbers show the additional accuracy obtained by
+    reconstructing with more coefficients.
+  
+ PlotDDMultiRes -- Interpolating MRA
+  Usage
+    PlotDDMultiRes(wc,L,scal,D)
+  Inputs
+    wc    1-d wavelet transform
+    L     level of coarsest scale
+    scal  scale factor [0 ==> autoscale]
+    D     Degree of DD filter used to make wc
+
+  Side Effects
+    A depiction of the multi-resolution decomposition
+    of the signal, as in S. Mallat.
+
+  See Also
+    PlotWaveCoeff, FWT_DD, IWT_DD, MakeDDFilter
+
+ PlotGaborPhase -- Partition phase space with congruent rectangles
+  Usage
+    PlotGaborPhase(pkt,ell[,titlestr])
+  Inputs
+    TFType    type of Time-Frequency Decomposition: 'CP' or 'WP'
+    pkt       wavelet or cosine packet table
+    ell       level of packet table to use
+    titlestr  optional title string for plot
+
+  Side Effects
+    Phase plot with 2^ell vertical and n/(2^ell) horizontal
+    subdivisions.   
+
+ PlotGenFracDimen -- Plot Generalized Fractal Dimension Function
+  Usage
+    PlotGenFracDimen(d,q,scale)
+  Inputs
+    d         matrix output by CalcGenFracDimen
+    q         optional list of exponents default linspace(-2,5,61)
+    scales    optional list of scales
+
+  Side Effects
+    Display D(q,a)   
+
+  See Also
+    CWT, WTMM, CalcThermoPartition
+
+ PlotMomentGenFun -- Display Moment Generating Function
+  Usage
+    PlotMomentGenFun(tau,q)
+  Inputs
+    tau       matrix a by nq of ``Moment Generating Func''
+    q         optional list of exponents default linspace(-2,5,61)
+
+  Description
+    tau(q) = Slope [ log(z(q,a))  versus log(a) ]
+
+  Side Effects
+    Displays a plot of tau(q) versus q
+
+  See Also
+    CalcMomentGenFun
+
+ PlotMRA_MT -- Multi-Resolution Display of 1-d Median Transform
+  Usage
+    PlotMRA_MT(wc,L,scal,D,[Tilte])
+  Inputs
+    wc    1-d median transform
+    L     level of coarsest scale
+    scal  scale factor [0 ==> autoscale]
+    D     degree of polynomial used in median interpolation, 0 or 2.
+
+  Side Effects
+    A depiction of the multi-resolution decomposition
+    of the signal, as in S. Mallat.
+
+  See Also
+    FMIPT, IMIPT
+
+ PlotMTCoeff -- Spike-plot display of Median Transform coefficients
+  Usage
+    PlotMTCoeff(wc,L,scal)
+  Inputs
+    wc    1-d median transform
+    L     level of coarsest scale
+    scal  scale factor [0 ==> autoscale]
+
+  Side Effects
+    A display of median coefficients (coarsest level 
+    NOT included) by level and position.
+
+ PlotMultiRes -- Multi-Resolution Display of 1-d Wavelet Transform
+  Usage
+    PlotMultiRes(wc,L,scal,qmf)
+  Inputs
+    wc    1-d wavelet transform
+    L     level of coarsest scale
+    scal  scale factor [0 ==> autoscale]
+    qmf   quadrature mirror filter used to make wc
+
+  Side Effects
+    A depiction of the multi-resolution decomposition
+    of the signal, as in S. Mallat.
+
+  See Also
+    PlotWaveCoeff, FWT_PO, IWT_PO, MakeONFilter
+
+ PlotMultiSpectrum -- Display Multifractal Spectrum
+  Usage
+    PlotMultiSpectrum(f,alpha)
+  Inputs
+    f         vector 1 by nalpha from CalcFracSpectrum
+    alpha     optional list of exponents default linspace(-.1,.9,11)
+
+  Side Effects
+    Displays a plot of f(alpha) versus alpha
+
+  See Also
+    CalcFracSpectrum
+
+ PlotPacketTable -- Display entries in wavelet, cosine packet tables
+  Usage
+    PlotPacketTable(pkt,scal)
+  Inputs
+    pkt     wavelet or cosine packet table
+    scal    optional scaling factor (0 => autoscale)
+
+  Side Effects
+    spike plot of coefficients in packet table
+
+ PlotPBSMultiRes -- Multi-Resolution Display of 1-d Wavelet Transform
+  Usage
+    PlotPBSMultiRes(wc,L,scal,qmf,dqmf)
+  Inputs
+    wc     1-d wavelet transform
+    L      level of coarsest scale
+    scal   scale factor [0 ==> autoscale]
+    qmf    quadrature mirror filter used to make wc
+    qqmf   dual quadrature mirror filter used to make wc
+
+  Side Effects
+    A depiction of the multi-resolution decomposition
+    of signal, as in S. Mallat.
+
+  See Also
+    PlotWaveCoeff, FWT_PBS, IWT_PBS, MakeBSFilter
+
+ PlotPhasePlane -- Plot Time-Frequency content of signal
+  Usage
+    PlotPhasePlane(TFType,btree,pkt[,titlestr,qmf]) 
+  Inputs
+    TFType       string 'WP' or 'CP' naming type of analysis
+    btree        basis tree (e.g. as produced by BestBasis)
+    pkt          wavelet or cosine packet table
+    titlestr     optional. signal name for plot title
+    qmf          optional. WP quadrature mirror filter
+
+  Side Effects
+    A plot with rectangles indicating the time-frequency 
+    content of WP or CP components of signal in given basis.
+
+  See Also
+    CPTour, WPTour
+
+ PlotPhaseTiling -- partition phase space by rectangular blocks
+  Usage
+    PlotPhaseTiling(type,btree,pkt[,titlestr,plotchar]) 
+  Inputs
+    type       string 'WP' or 'CP' naming type of TF analysis
+    btree      basis tree (e.g. as produced by BestBasis)
+    pkt        wavelet or cosine packet table
+    titlestr   signal name (optional)
+    plotchar   plotting character (optional)
+
+  Side Effects
+    A plot with rectangles based on recursive dyadic partitioning
+    of y axis according to splits in basis tree.
+  See Also
+    CPTour, WPTour
+
+ PlotPhaseVarious -- Show several different phase plane images
+  Usage
+    PlotPhaseComparison(wp,wp_stree,cp,cp_stree,titlestr)
+  Inputs  
+    wp          Wavelet Packet table
+    wp_stree    Wavelet Packet Stat tree
+    cp          Cosine Packet table
+    cp_stree    Cosine Packet Stat tree
+    titlestr    title for plot
+
+  Side Effects
+    For both Wavelet Packets and Cosine Packets:
+      phase plot, best level
+      phase plot, best basis
+      printout, entropies best level, best basis
+
+ PlotRidges -- Log-Log Plot of Ridges in Continuous Wavelet Transform
+  Usage
+    PlotRidges(ridgelist,wt,skellist,skelptr,skellen)
+  Inputs
+    ridgelist index of ridges to plot, 1 <= ridgelist(i) <= nchains
+    wt        continuous wavelet transform output by CWT
+    skellist  storage for list of chains
+    skelptr   vector of length nchain -- pointers to heads of chains
+    skellen   vector of length nchain -- length of skellists
+
+  Side Effects
+    Log-Log Plot of the amplitude of the wavelet transform versus
+    scale along various ridges
+
+  See Also
+    CWT, WTMM, BuildSkelMap, PlotSkelMap
+
+ PlotSkelMap -- Display Skeleton of Continuous Wavelet Transform
+  Usage
+    PlotSkelMap(n,nscale,skellist,skelptr,skellen [,titlestr,color,chain])
+  Inputs
+    n         signal length
+    nscale    number of scales in cwt
+    skellist  storage for list of chains
+    skelptr   vector of length nchain -- pointers to heads of chains
+    skellen   vector of length nchain -- length of skellists
+    titlestr  optional, if number suppresses title string, if string
+	       replaces default title string
+    color    optional, if present specifies color of skeleton curves
+              default is yellow.
+    chain     optional, if present suppresses display of chain
+              indicators
+    nvoice    default=12
+    minscale  default=2
+    noctave   default=log2(n)-2
+  Description
+    A Time-Scale Diagram is drawn with the skeleton of the
+    wavelet transform displayed
+
+  See Also
+    BuildSkelMap, ExtractRidge
+
+ PlotSpikes -- Plot 1-d signal as baseline with series of spikes
+  Usage
+    PlotSpikes(base,t,x)
+  Inputs
+    base   number, baseline level
+    t      ordinate values
+    x      1-d signal, specifies spike deflections from baseline
+
+  Side Effects
+    A plot of spikes on a baseline
+
+  See Also
+    PlotWaveCoeff, PlotPacketTable
+
+ PlotStatTable -- Plot Stationary Wavelet Transform
+  Usage
+    PlotStatTable(StatWT,scal)
+  Inputs
+    StatWT   1-d stationary wavelet transform
+    scal     optional scale factor [0 ==> autoscale]
+
+  Side Effects
+    A depiction of the stationary wavelet transform,
+    much like multi-resolution decomposition
+    of signal
+
+  See Also
+    PlotMultiRes, FWT_Stat, IWT_Stat
+
+ PlotSynthesisTable -- Display entries in atomlist as WP or CP table
+  Usage
+    MakeSynthesisTable(TFType,atomic,n,D,scal,ttl)
+  Inputs
+    TFType	  string, 'WP' or 'CP' indicating type of atom
+    atomic	  atoms from wavelet packet or cosine packet table
+    n,D      usual packet table parameters (from which atoms are taken)
+    scal     optional scaling factor (0 => autoscale)
+    ttl      optional title
+
+  Side Effects
+    spike plot of coefficients in synthesis table
+
+  See Also
+    MakeSynthesisTable, PlotPacket Table
+
+ PlotThermoPartition -- Plot Thermodynamic Partition Function
+  Usage
+    PlotThermoPartition(sq,z,cw,q)
+  Inputs
+    sq        selected scales, if empty, linspace(-2,5,7)
+    z         matrix output by CalcThermoPartition
+    cw        matrix output by CWT
+    scales
+    q         optional list of exponents default linspace(-2,5,61)
+  Side Effects
+    z(q,a) = sum_i( |CWT(a,b(i))|^q ),  where b = (b(i)) is a list
+    of wavelet transform maxima  
+
+  See Also
+    CWT, WTMM, CalcThermoPartition
+
+ PlotWaveCoeff -- Spike-plot display of wavelet coefficients
+  Usage
+    PlotWaveCoeff(wc,L,scal)
+  Inputs
+    wc    1-d wavelet transform
+    L     level of coarsest scale
+    scal  scale factor [0 ==> autoscale]
+
+  Side Effects
+    A display of wavelet coefficients (coarsest level 
+    NOT included) by level and position.
+
+  See Also
+    PlotMultiRes, FWT_PO, IWT_PO, PlotSpikes
+
+ PlotWavePhase -- Partition phase space by wavelet tiling
+  Usage
+    PlotWavePhase(pkt[,titlestr])
+  Inputs
+    pkt       wavelet packet table
+    titlestr  optional title string for plot
+
+  Side Effects
+    Phase plot with tiles doubling in width and
+    halving in height at each generation.
+
+ PlotYMMultiRes -- Plot MRA for Meyer Wavelet
+  Usage
+    PlotYMMultiRes(wc,L,scal,deg)
+  Inputs
+    wc    1-d wavelet transform
+    L     level of coarsest scale
+    scal  scale factor [0 ==> autoscale]
+    deg   Degree of Meyer Polynomial Window (e.g. 3)
+
+  Side Effects
+    A depiction of the multi-resolution decomposition
+    of the signal, as in S. Mallat.
+
+  See Also
+    PlotMultiRes, FWT_YM, IWT_YM
+
+ PruneSkelMap -- Remove Thin Bones in Skeleton of Continuous Wavelet Transform
+  Usage
+    [skellist,skelptr,skellen] = PruneSkelMap(cw,dynrange,persist,skm,skp,skl)
+  Inputs
+    cw         signal length
+    dynrange   kill branch when it reaches amplitude less than this fraction of level norm 
+    persist    kill branch if it doesn't span persist octaves
+    skm        storage for list of chains
+    skp        vector of length nchain -- pointers to heads of chains
+    skl        vector of length nchain -- length of skellists
+  Outputs
+    skellist   storage for list of chains
+    skelptr    vector of length nchain --pointers to heads of chain
+    skellen    vector of length nchain -- length of skellists
+
+  Description
+    Backwards pruning of ``weak amplitudes'': i.e. amplitudes
+      smaller than dynrange * norm at scale a 
+
+    Ridges are deleted from skeleton if
+      they Fail to have a length greater than persist octaves
+    
+  See Also
+    BuildSkelMap, ExtractRidge, PlotSkelMap
+
+ qnode -- Quad tree indexing
+  Usage
+    ix = qnode(d,bx,by)
+  Inputs
+    d       depth in splitting
+    bx,by   box coordinates at that depth
+  Outputs
+    ix      index of that node in tree
+
+  Description
+    ix = 4^(d) + by + bx*2^(d)
+
+ qpkt2ix -- Translate quad-packet index to linear index
+  Usage
+    [ix,iy] = qpkt2ix(deep,bx,by,kx,ky,n)
+  Inputs
+    deep      depth of splitting
+    bx,by     specify box at depth d
+    kx,ky     specify coordinates within the box
+  Outputs
+    ix,iy     linear indices in 2-d coefficient array
+              where coefficients for quadlet (deep,bx,by,kx,ky)
+              are stored
+
+  Description
+    This routine is called by other, higher-level Wavelab functions
+    and is not intended to be useful for most users.
+
+ quad2ix -- Translate 2-d wavelet indexing into linear indexing
+  Usage
+    [kx,ky] = quad2ix(j,k1,k2,ep)
+  Inputs
+    j      resolution level
+    k1,k2  spatial indices
+    ep     spatial orientation
+           ep = 0:  Father(x)Father(y)
+                1:  Mother(x)Father(y)
+                2:  Father(x)Mother(y)
+                3:  Mother(x)Mother(y)
+  Outputs
+    kx,ky  index in 2-d wavelet transform array of indicated wavelet
+
+  See Also
+    FWT2_PO, IWT2_PO
+
+ quadbounds -- x,y bounds of quadlet
+  Usage
+    [lox,hix,loy,hiy] = quadbounds(d,bx,by,n)
+  Inputs
+    d       depth in splitting
+    bx,by   box coordinates at that depth
+    n       extent of image
+  Outputs
+    lox     lower x-index of quadlet
+    loy     lower y-index of quadlet
+    hix     upper x-index of quadlet
+    hiy     upper y-index of quadlet
+
+  Description
+    This routine is called by other, higher-level Wavelab functions
+    and is not intended to be useful for most users.
+
+ quadlength -- Find length and dyadic length of square matrix
+  Usage
+    [n,J] = quadlength(x)
+  Inputs
+    x   2-d image; size(n,n), n = 2^J (hopefully)
+  Outputs
+    n   length(x)
+    J   least power of two greater than n
+
+  Side Effects
+    A warning message is issue if n is not a power of 2,
+    or if x is not a square matrix.
+
+ quadmedian -- find the median value of a quadratic polynomial on an interval
+
+
+ QuadMedRef -- Quadratic Interpolation given median information
+  Usage
+    [m21,m22,m23, a,b,c] = QuadMedRef(m1, m2, m3)
+  Inputs
+    m1,m2,m3     medians of the desired quadratic polynomial on
+                 [0,1], [1,2] and [2,3] respectively
+    option       interval to impute to:
+                   default, impute to [1,2]
+                   option='Left' => impute to [0,1]
+                   option='Right => impute to [2,3]
+  Outputs
+    m21,m22,m23  medians of the computed quadratic polynomial on
+                 [1,4/3], [4/3,5/3], [5/3,2] respectively
+    a, b, c      coef. of the interpolating quadratic polynomial,
+                 p(x) = a + bx + cx^2,
+                 Median{p(x) | [0,1]} = m1,
+                 Median{p(x) | [1,2]} = m2, and
+                 Median{p(x) | [2,3]} = m3.
+ 
+ QuasiDCT -- Nearly Discrete Cosine Transform of Type I.
+   Usage
+    c = QuasiDCT(x,dir)
+  Inputs
+    x     signal of dyadic length
+    dir   string direction indicator 'f' forward ; 'i' inverse 
+  Outputs
+    c     discrete cosine transform, type I, of x
+
+ See Also
+    CoarseMeyerCoeff, CoarseMeyerProj
+ QuasiDST -- Nearly Discrete Sine Transform of Type I.
+   Usage
+    s = QuasiDST(x,dir)
+  Inputs
+    x     signal of dyadic length
+    dir   string direction indicator 'f' forward ; 'i' inverse 
+ Outputs
+    s     discrete sine transform, type I, of x
+
+ See Also
+    CoarseMeyerProj
+ ReadImage -- Read Image file in 8-bit raw binary format
+  Usage
+    Image = ReadImage(Name)
+  Inputs
+    Name    'Barton', 'Canaletto', 'Coifman', 'Daubechies',
+            'Fingerprint', 'Lincoln', 'Lenna', 'MRIScan', 'Phone'
+  Outputs
+    Image    2-d signal, n by n, n dyadic
+
+  Side Effects
+    A descriptor file for the data is printed
+
+ ReadSignal -- Read 1-d signal from file in ascii format
+  Usage
+    signal = ReadSignal(Name)
+  Inputs
+    Name    'Caruso', 'ESCA', 'Greasy', 'HochNMR',
+            'Seismic', 'Laser', 'RaphaelNMR',
+            'Sunspots', 'Transients', 'Tweet'
+  Outputs
+    signal   1-d signal
+
+  Side Effects
+    A descriptor file for the data is printed
+
+ Find all the real roots of poly. P within the real interval [a,b]
+ RegisterPlot -- Add legend with file name, date, flag
+  Usage
+    RegisterPlot(figname,nrflag)
+  Inputs
+    figname    string. In principle this can be any string.
+               In customary use, one supplies the name of the script
+               file generating the current display.
+    nrflag     string.  In principle this can be any string
+               In customary use, one supplies '{R} or '{NR}'
+               whether the plot is reproducible or not.
+
+  Side Effects
+    Near the bottom of the current figure, a legend is displayed
+    in a small font; the legend contains the figname and nrflag strings
+    and the current date.
+
+  See Also
+    AdaptDemo, BlockyDemo, IdealDemo, TourDemo
+
+ reverse -- Reverse order of elements in 1-d signal
+  Usage
+    r = reverse(x)
+  Inputs
+    x     1-d signal
+  Outputs
+    r     1-d time-reversed signal
+
+  See Also
+    flipud, fliplr
+
+ Ridge_AWT -- Ridges of an Analytic Wavelet Transform
+  Usage
+    localmaxima = Ridge_AWT(m,par,ABS);
+  Inputs
+    m       	  input matrix
+    par    	  parameter, 2*par is how many neighbours to compare
+    ABS	  flag, compare by absolute value(1) or not(0)
+  Outputs
+    localmaxima  local maxima of every column, binary matrix same size
+		  as m.
+  Description
+    see section 4.4.2 of Mallat's book
+  Algorithm
+    Get the local maxima first, then compare with original value
+  References
+ 
+ Ridge_WindowFT -- Find Ridges of Window Fourier Transform
+  Usage
+    ridges = Ridge_WindowFT(specgm);
+  Inputs
+    specgm   	output of window Fourier transform, from WindowFT
+  Outputs
+    ridges	ridges table of window Fourier transform;
+		A binary table having same size as specgm
+  Side Effects
+    
+  Description
+
+  Algorithm
+     
+  Examples
+     
+  See Also
+    WindowFT	
+  References
+    Mallat, "A Wavelet Tour of Signal Processing"
+ rnshift -- t circular right shift of 1-d signal
+  Usage
+    r = rnshift(x,t)
+  Inputs
+    x   1-d signal
+  Outputs
+    r   1-d signal 
+        r(i) = x(i-t) for i > t
+	 r(i) = x(n+i-t) else
+
+ rshift -- Circular right shift of 1-d signal
+  Usage
+    r = rshift(x)
+  Inputs
+    x   1-d signal
+  Outputs
+    r   1-d signal 
+        r(i) = x(i-1) except r(1) = x(n)
+
+ RWT -- Real Wavelet Transform
+  Usage
+    rwt = RWT(x,nvoice,wavelet)
+  Inputs
+    x        signal, dyadic length n=2^J, real-valued
+    nvoice   number of voices/octave
+    wavelet  string 'Gauss', 'DerGauss','Sombrero', 'Morlet'
+  Outputs
+    rwt      matrix n by nscale where
+             nscale = nvoice .* noctave
+
+  Description
+     see sections 4.3.1 and 4.3.3 of Mallat's book  
+
+ CWTscale -- Complement to Continuous Wavelet Transform
+  Usage
+    scale = CWTscale(sig,cwt);
+  Inputs
+    sig      1-d signal
+    cwt      continous wavelet transform of sig, Output from CWT(sig)
+  Outputs
+    scale    complement of continuous wavelet Transform of sig
+  Side Effects   
+  Description
+     scale = fft(sig) - sum(columns of cwt)
+  Algorithm
+     
+  Examples
+     N = 1024;     % signal length; 
+     nvoice = 12;  
+     % create a Brownian
+     CantorMeasure = MakeFractal(N,3,'Deterministic',[.5 0 .5]);
+     Devil  = cumsum(CantorMeasure); t = (.5:(N-.5))./N;
+     figure; plot(t, Devil); title(sprintf(' Devil Staircase Signal'));
+     % make CWT
+     Devil_cwt = CWT(Devil,nvoice,'Sombrero');
+     % complement to CWT
+     scale = CWTscale(Devil,Devil_cwt);
+     plot(real(scale));
+  See Also
+    CWT   iCWT
+  References
+    Mallat, "Wavelet Signal Processing"; 4.?.?
+    
+ SeparateCoeff -- Separate wavelet coeff. into local trig. coeff.
+  Usage
+    [rtrigcoefs, itrigcoefs] = SeparateCoeff(wcoefs,window)
+ Inputs
+   wcoefs       wavelet coefficients for a given level.
+   window       string selecting window for projection.
+                'm' -> mother, 'f' -> father, 't' -> truncated mother
+ Outputs
+   rtrigcoefs   trigonometric coefficients corresponding to
+                   projection of real part of \hat f
+   itrigcoefs   trigonometric coefficients corresponding to
+                   projection of imag part of \hat f
+ See Also
+   CoarseMeyerProj, DetailMeyerProj, FineMeyerProj
+
+ ShapeAsRow -- Make signal a row vector
+  Usage
+    row = ShapeAsRow(sig)
+  Inputs
+    sig     a row or column vector
+  Outputs
+    row     a row vector
+
+  See Also
+    ShapeLike
+
+ ShapeLike -- Make 1-d signal with given shape
+  Usage
+    vec = ShapeLike(sig,proto)
+  Inputs
+    sig      a row or column vector
+    proto    a prototype shape (row or column vector)
+  Outputs
+    vec      a vector with contents taken from sig
+             and same shape as proto
+
+  See Also
+    ShapeAsRow
+
+ SkelMap -- Chain together Ridges of Wavelet Transform
+  Usage
+    [skellist,skelptr,skellen] = SkelMap(maxmap)
+  Inputs
+    maxmap    matrix MM_RWT
+  Outputs
+    skellist  storage for list of chains
+    skelptr   vector of length nchain --pointers
+              to head of chain
+    skellen   vector of length nchain -- length of skellists
+
+  Description
+    A chain is a list of maxima at essentially the same position
+    across a range of scales. 
+    It is identified from the maxmap data structure output by WTMM
+    by finding a root at coarse scales and identifying the closest
+    maxima at the next finest scale.
+    NO PROVISION IS MADE FOR 'terminating' A CHAIN before the
+    finest scale is reached.
+
+    nchain = len(skellen) chains are found.
+    A chain data structure is a list of scale-location pairs
+    All chains are stored together in skellist.
+    The k-th list begins in skellist at skelptr(k)
+    The k-th list has length skellen(k)
+
+  See Also
+    RWT, MM_RWT, PlotSkelMap, ExtractRidge
+
+  SNR- Signal/Noise ratio
+  Usage
+    value=SNR(sig1,sig2)
+  Inputs   
+    sig1	Original reference signal
+    sig2	Restored or noisy signal
+  Outputs
+    value	Signal/Noise ratio.
+
+ SoftThresh -- Apply Soft Threshold 
+  Usage 
+    x = SoftThresh(y,t)
+  Inputs 
+    y     Noisy Data 
+    t     Threshold
+  Outputs 
+    x     sign(y)(|y|-t)_+
+
+ Spectrogram -- Time-Varying Spectrum
+  Usage
+    specgm = Spectrogram(sig,w,m,titl)
+  Inputs
+    sig      1-d signal
+    w        window half-length, default = n/2
+    m        inter-window spacing, default=1
+    titl     Optional Title String Modifier
+  Outputs
+    specgm   spectrogram
+
+  Side Effects
+    Image Plot of the spectrogram
+
+  See Also
+    WVDist, WVDist_AF, ImagePhasePlane
+
+
+  ST -- Soft Threshold Applied to Wavelet Coefficients.
+  Usage 
+    [out,wcoef,wcoefrest] = ST(Noisy,L,qmf,sigma)
+  Inputs
+    Noisy      1-d signal. length(y)= 2^J
+    L      Low-Frequency cutoff for shrinkage (e.g. L=4)
+               Should have L << J!
+    qmf    Quadrature Mirror Filter for Wavelet Transform
+               Optional, Default = Symmlet 8.
+    sigma  Standard deviation of additive Gaussian White Noise.
+  Outputs 
+    out     	estimate, obtained by applying soft thresholding on
+          	 wavelet coefficients
+    wcoef		Wavelet Transform of input signal	
+    wcoefrest    	Wavelet Transform of estimate
+
+  ST2 -- Sofd Threshold Applied to Wavelet Coefficients.
+  Usage 
+    out = ST2(Noisy,L,qmf,sigma)
+  Inputs
+    Noisy      2-d signal.
+    L      Low-Frequency cutoff for shrinkage (e.g. L=4)
+               Should have L << J!
+    qmf    Quadrature Mirror Filter for Wavelet Transform
+               Optional, Default = Symmlet 8.
+    thresh Threshold to apply on wavelet coefficients
+  Outputs 
+    out     	estimate, obtained by applying hard thresholding on
+          	 wavelet coefficients	
+
+ Stat2TI -- Convert Stationary Wavelet Transform to Translation-Invariant Transform 
+  Usage
+    TIWT = Stat2TI(StatWT)
+  Inputs
+    StatWT  stationary wavelet transform table as FWT_Stat
+  Outputs
+    TIWT    translation-invariant transform table as FWT_TI
+
+  See Also
+    Stat2TI, FWT_TI, FWT_Stat
+
+ StdWaveMult -- Standard Wavelet Matrix Multiplication
+  Usage
+    y = StdWaveMult(S,x,L,qmf)
+  Inputs
+    S         Matrix in standard form
+    x         vector in natural basis
+    L         Coarsest Resolution level of Wavelet Transform
+    qmf       quadrature mirror filter (orthogonal)
+  Outputs
+    y         Result of nonstandard multiplicxation
+
+  Description
+    If M is a matrix, there are two ways to compute y = M*x.  The first
+    is to use MATLAB to do the product as just written.  This algorithm
+    works in order n^2 time, where n is the problem size.
+
+    The second is to transform both the matrix and vector to their
+    standard forms in the wavelet basis and multiply the standard forms. 
+    If the matrix is sparse in nonstandard form, this can be an order n.
+    algorithm.
+
+ StretchMatrix -- Stretch matrix into BCR nonstandard form
+  Usage
+    [i,j] = StretchMatrix(ie,je,n,L)
+  Inputs
+    ie,je    row/col indices of nonxero elements of matrix
+    n        size of matrix
+    L        number of resolution levels
+  Outputs
+    i,j      row/col indices of elements in nonstandard form
+             of matrix
+
+  Description
+    To construct the nonstandard form of a matrix, do something
+    like this:
+       [ie,je,s] = find(StdForm)
+       [i,j]     = StretchMatrix(ie,je,n,L)
+       NonStd    = sparse(i,j,s,2*n,2*n)
+
+ SUREThresh -- Adaptive Threshold Selection Using Principle of SURE
+  Usage 
+    thresh = SUREThresh(y)
+  Inputs 
+    y        Noisy Data with Std. Deviation = 1
+  Outputs 
+    x        Estimate of mean vector
+    thresh   Threshold used
+
+  Description
+    SURE referes to Stein's Unbiased Risk Estimate.
+
+ symm_aconv -- Symmetric Convolution Tool for Two-Scale Transform
+  Usage
+    y = symm_aconv(sf,x)
+  Inputs
+    sf   symmetric filter
+    x    1-d signal
+  Outputs
+    y    filtered result
+
+  Description
+    Filtering by periodic convolution of x with the
+    time-reverse of sf.
+
+  See Also
+    symm_iconv, UpDyadHi_PBS, UpDyadLo_PBS, DownDyadHi_PBS, DownDyadLo_PBS
+
+ symm_iconv -- Symmetric Convolution Tool for Two-Scale Transform
+  Usage
+    y = iconv(sf,x)
+  Inputs
+    sf  symmetric filter
+    x   1-d signal
+  Output
+    y    filtered result
+
+  Description
+    Filtering by periodic convolution of x with sf
+
+  See Also
+    symm_aconv, UpDyadHi_PBS, UpDyadLo_PBS, DownDyadHi_PBS, DownDyadLo_PBS
+
+ TFDist_AF -- Alias-Free Generalized Discrete Time-Frequency Distribution
+  Usage
+    aftf = TFDist_AF(sig)
+  Inputs
+    sig     1-d signal of dyadic length n=2^J
+  Outputs
+    aftf    complex-valued matrix representing the alias-free generalized
+            time-frequency distribution of zero-extended signal with rows
+            corresponding to frequencies and columns corresponding to times
+
+  Side Effects
+    Image Plot of the alias free TF distribution
+
+  See Also
+   WigDist, AFWigDist, specgram, ImagePhasePlane
+
+  References
+   Jechang Jeong and William J. Williams,
+   "Alias-Free Generalized Discrete-Time Time-Frequency Distribution
+   IEEE Transactions on Signal Processing", vol. 40, pp. 2757-2765
+ 
+ ThreshCP -- Cosine packet decomposition of a noisy signal,
+		Best Basis analysis, Thresholding in Best Basis
+  Usage 
+    out=ThreshCP(Noisy,sigma,type,mult,D,bellname)
+  Inputs
+    Noisy	1-d Noisy signal, length(Noisy)= 2^J.
+    sigma  	Standard deviation of additive Gaussian White Noise.
+    type   	'S' for soft thresholding, 'H' for hard thresholding.
+		Optional, Default=hard thresholding.
+    mult   	Multiplier of sigma to obtain the value of the threshold.
+           	Optional, Default = sqrt(2*log(n)), where n is the
+		length of datas.
+    D          depth of finest time splitting.
+		Optional, Default=J-1.
+    bellname   Name of bell to use.
+           	Optional, Default = 'Sine'.
+  Outputs 
+    out     	Estimate, obtained by applying thresholding on
+          	cosine packets coefficients.
+  ThreshWave -- Denoising of 1-d signal with wavelet thresholding.
+  Usage 
+    out=ThreshWave(Noisy,type,TI,sigma,mult,L,qmf)
+  Inputs
+    Noisy	1-d Noisy signal, length(Noisy)= 2^J.
+    type   	'S' for soft thresholding, 'H' for hard thresholding.
+		Optional, Default=hard thresholding.
+    TI		Enter 1 if you want translation-invariant denoising,
+		0 if you don't.
+		Optional, Default=non-invariant. 
+    sigma  	Standard deviation of additive Gaussian White Noise.
+		Enter 0 if you want sigma to be estimated by median filtering.
+		Optional, Default=estimated by median filtering.
+    mult   	Multiplier of sigma to obtain the value of the threshold.
+           	Optional, Default = sqrt(2*log(n)), where n is the
+	    	length of datas.
+    L      	Low-Frequency cutoff for shrinkage (e.g. L=4)
+           	Should have L << J!
+           	Optional, Default = 3.
+    qmf    	Quadrature Mirror Filter for Wavelet Transform
+           	Optional, Default = Symmlet 4.
+  Outputs 
+    out     	Estimate, obtained by applying thresholding on
+          	wavelet coefficients.
+  ThreshWave2 -- Denoising of 2-d image with wavelet thresholding.
+  Usage 
+    out=ThreshWave2(Noisy,type,TI,sigma,mult,L,qmf)
+  Inputs
+    Noisy	2-d Noisy image, size(Noisy)= 2^J*2^J.
+    type   	'S' for soft thresholding, 'H' for hard thresholding.
+		Optional, Default=hard thresholding.
+    TI		Enter 1 if you want translation-invariant denoising,
+		0 if you don't.
+		Optional, Default=non-invariant. 
+    sigma  	Standard deviation of additive Gaussian White Noise.
+		Enter 0 if you want sigma to be estimated by median filtering.
+		Optional, Default=estimated by median filtering.
+    mult   	Multiplier of sigma to obtain the value of the threshold.
+           	Optional, Default = sqrt(2*log(n)), where n is the
+	    	number of pixels/
+    L      	Low-Frequency cutoff for shrinkage (e.g. L=4)
+           	Should have L << J!
+           	Optional, Default = 3.
+    qmf    	Quadrature Mirror Filter for Wavelet Transform
+           	Optional, Default = Symmlet 4.
+  Outputs 
+    out     	Estimate, obtained by applying thresholding on
+          	wavelet coefficients.
+
+ ThreshWP -- Wavepacket decomposition of a noisy signal,
+		Best Basis analysis, Thresholding in Best Basis
+  Usage 
+    out=ThreshWP(Noisy,sigma,type,mult,D,qmf)
+  Inputs
+    Noisy	1-d Noisy signal, length(Noisy)= 2^J.
+    sigma  	Standard deviation of additive Gaussian White Noise.
+    type   	'S' for soft thresholding, 'H' for hard thresholding.
+		Optional, Default=hard thresholding.
+    mult   	Multiplier of sigma to obtain the value of the threshold.
+           	Optional, Default = sqrt(2*log(n)), where n is the
+		length of datas.
+    D          degree of finest frequency partition.
+		Optional, D=J-3.
+    qmf      	orthonormal quadrature mirror filter
+           	Optional, Default = Symmlet 4.
+  Outputs 
+    out     	Estimate, obtained by applying thresholding on
+          	wavepackets coefficients.
+ TI2Stat -- Convert Translation-Invariant Transform to Stationary Wavelet Transform
+  Usage
+    StatWT = TI2Stat(TIWT)
+  Inputs
+    TIWT     translation invariant table from FWT_TI
+  Outputs
+    StatWT   stationary wavelet transform table table as FWT_Stat
+
+  See Also
+    Stat2TI, FWT_TI, FWT_Stat
+
+  TIDenoiseHard2 -- Translation-Invariant Hard Wavelet Thresholding of
+		Images.
+  Usage 
+    out=TIDenoiseHard2(Noisy,L,qmf,sigma)
+  Inputs
+    Noisy      Noisy image.
+    L  	Deepness of decomposition.
+    qmf    	Quadrature Mirror Filter for Wavelet Transform
+    thresh     Threshold to apply on Wavelet Coefficients
+  Outputs 
+    out    	Restored image.
+
+  TIDenoiseSoft2 -- Translation-Invariant Soft Wavelet Thresholding of
+		Images.
+  Usage 
+    out=TIDenoiseSoft2(Noisy,L,qmf,thresh)
+  Inputs
+    Noisy      Noisy image.
+    L  	Deepness of decomposition.
+    qmf    	Quadrature Mirror Filter for Wavelet Transform
+    thresh	Threshold.
+  Outputs 
+    out    	Restored image.
+
+ NOTE: CONFLICT WITH NONLINEAR/TRIAD.M.  triad(j) there = triad(j) here
+ Q: Is there a way to make sure the copy of triad here is used?
+ triad -- Index entire j-th triad of 1-d wavelet xform
+  Usage
+    ix = dyad(j);
+  Inputs
+    j     integer
+    par   1 or 2
+  Outputs
+    ix    indices of wavelet coeffts at j-th level
+
+ 
+        
+ unfold -- Undo folding projection with (+,-) polarity
+  Usage
+    [xc,xl,xr] = unfold(y,bp,bm)
+  Inputs
+    y     folded series
+    bp    interior of window
+    bm    exterior of window
+  Outputs
+    xc    unfolded central packet
+    xl    contribution of unfolding to left  packet
+    xr    contribution of unfolding to right packet
+
+ See Also
+    fold, CPAnalysis, CPSynthesis, CPImpulse
+
+ UnfoldMeyer -- Unfold a vector using a specified window.
+  Usage
+    unfldx = UnfoldMeyer(x, sympts, polarity, window,deg)
+  Inputs
+    fldx     folded version of x. Supported on interval [sympts(1),sympts(2)]
+                (typically of length n=2^j for some j)
+    sympts    symmetry points, of the form [a,b]
+    polarity  string selection folding polarity
+                      ' mp  =>  (-,+) '
+                      ' pm  =>  (+,-) '
+                      ' mm  =>  (-,-) '
+                      ' pp  =>  (+,+) '
+    window    string selecting window
+                      'm' => Mother Meyer Wavelet Window
+                      't' => Truncated Mother Meyer Wavelet Window
+                      'f' => Father Meyer Wavelet Window
+    deg       degree of Meyer window
+
+  Outputs 
+    unfldx    unfolded version of x. Extended outside interval [sympts(1),sympts(2)]
+              using the selected polarity and window
+  See Also
+    WindowMeyer, CoarseMeyerProj, DetailMeyerProj, FineMeyerProj
+ 
+ UnlockAxes -- Version-independent axis command
+  Usage
+    UnlockAxes
+
+  Side Effects
+    Cancels the *hold* side effect of LockAxes using a method
+    which works under both v3.5 and v4.0 of MATLAB.
+
+  See Also
+    LockAxes, MATLABVERSION
+
+ Unpack2dBasisCoeff -- Extract basis coefficients from 2-d packet table
+  Usage
+    coef = Unpack2dBasisCoeff(basis,pkt2)
+  Inputs
+    basis    Quad Tree selecting 2-d packet basis
+    pkt2     n^2 by D, 2-d packet table
+  Outputs
+    coef     2-d packet coefficients in given basis
+
+ UnpackBasisCoeff -- Extract basis coefficients from packet table
+  Usage
+    x = UnpackBasisCoeff(basis,pkt)
+  Inputs
+    basis     basis tree
+    pkt       packet table (wavelet- or cosine-)
+  Outputs
+    x         coefficients of signal in that basis
+
+ UnpackShiftCoeff -- get wavelet coeff. of circulant shift
+  Usage
+    c = UnpackShiftCoeff(path,TIWT)
+  Inputs
+    path      path tree (e.g. from BestShift)
+    TIWT      translation invariant transform table from FWT_TI
+  Outputs
+    c         coefficients of signal in that shift
+
+  See Also
+    PackShiftCoeff, FWT_TI, BestShift
+
+ UnpackStatValue -- Unpack the value for given basis from the stat tree
+  Usage
+    s = UnpackStatValue(btree,stree)
+  Inputs
+    btree        basis tree
+    stree        stat tree
+  Outputs
+    s            stat value
+
+  Description
+    When using the BestBasis function, the stat value is both printed out
+    and stored in the first entry of vtree when called via
+         [btree,vtree] = BestBasis(stree,D)
+
+    It may be interesting to examine the stat value for a basis other than
+    the ``best'' chosen by the Coifman-Wickerhauser algorithm, e.g. for a
+    basis constructed by MakeBasis.
+
+  See Also
+    BestBasis, CalcStatTree, MakeBasis
+
+ UpDyad_SBS -- Symmetric Upsampling operator
+  Usage
+    x = UpDyad_SBS(beta,alpha,qmf,dqmf)
+  Inputs
+    beta  coarse coefficients
+    alpha fine coefficients
+    qmf   quadrature mirror filter
+    dqmf  dual quadrature mirror filter
+  Outputs
+    x     1-d signal at fine scale
+  See Also
+    DownDyad_SBS, IWT_SBS
+
+ UpDyadHi -- Hi-Pass Upsampling operator; periodized
+  Usage
+    u = UpDyadHi(d,f)
+  Inputs
+    d    1-d signal at coarser scale
+    f    filter
+  Outputs
+    u    1-d signal at finer scale
+
+  See Also
+    DownDyadLo, DownDyadHi, UpDyadLo, IWT_PO, aconv
+
+ UpDyadHi_PBS -- Hi-Pass Upsampling operator; periodized
+  Usage
+    u = UpDyadHi_PBS(d,f)
+  Inputs
+    d    1-d signal at coarser scale
+    sf   symmetric filter
+  Outputs
+    u    1-d signal at finer scale
+
+  See Also
+    DownDyadLo_PBS, DownDyadHi_PBS, UpDyadLo_PBS, IWT_PBS, symm_aconv
+
+ UpDyadLo -- Lo-Pass Upsampling operator; periodized
+  Usage
+    u = UpDyadLo(d,f)
+  Inputs
+    d    1-d signal at coarser scale
+    f    filter
+  Outputs
+    u    1-d signal at finer scale
+
+  See Also
+    DownDyadLo, DownDyadHi, UpDyadHi, IWT_PO, iconv
+
+ UpDyadLo_PBS -- Lo-Pass Upsampling operator; periodized
+  Usage
+    u = UpDyadLo_PBS(d,sf)
+  Inputs
+    d    1-d signal at coarser scale
+    sf   symmetric filter
+  Outputs
+    u    1-d signal at finer scale
+
+  See Also
+    DownDyadLo_PBS , DownDyadHi_PBS , UpDyadHi_PBS, IWT_PBS, symm_iconv
+
+ UpQuad -- Merge four subbands into 2d image
+  Usage
+    Q = UpQuad(quad,qmf,xbit,ybit)
+  Inputs
+    Quad   quadlet to be joined 4->1 channel 
+    qmf    orthogonal quadrature mirror filter  
+    xbit   x-position of quadlet in 2-d freq plane
+    ybit   y-position of quadlet in 2-d freq plane
+  Outputs
+    q      quadlet after splitting
+
+  Description
+    A 2-d signal split into four channels: (Lo_x,Lo_y),
+    (Lo_x,Hi_y), (Hi_x,Lo_y), (Hi_x,Hi_y) is unsplit
+    into original image.
+
+    This routine is called by other, higher-level WaveLab
+    functions and may not be useful for many users.
+
+  See Also
+    IPT2_WP, DownQuad
+
+ UpSample -- Upsampling operator
+  Usage
+    u = UpSample(d[,s]) 
+  Inputs
+    d   1-d signal, of length n
+    s   upsampling scale, default = 2
+  Outputs
+    u   1-d signal, of length s*n with zeros
+        interpolating alternate samples
+        u(s*i-1) = d(i), i=1,...,n
+
+ ValSUREThresh -- Adaptive Threshold Selection Using Principle of SURE
+  Usage 
+    thresh = ValSUREThresh(y)
+  Inputs 
+    y        Noisy Data with Std. Deviation = 1
+  Outputs 
+    thresh   Value of Threshold
+
+  Description
+    SURE referes to Stein's Unbiased Risk Estimate.
+
+ versaplot -- Version-independent plot routine
+  Usage
+    versaplot(subp,xarg,yarg,parg,tit,ax,hld)
+  Inputs
+    subp   vector to be supplied to subplot. ignored if empty.
+    xarg   vector to be supplied to subplot. ignored if empty
+    yarg   vector to be supplied to subplot. REQUIRED.
+    parg   character string to be supplied to plot. 
+    tit    vector to be supplied to title. ignored if empty.
+    ax     vector to be supplied to axis. ignored if empty.
+    hld    if not empty, sign(hld) dictates call either to
+           hold off(-1) or on(1).
+
+  Side Effects
+    If subp is not empty, the plot is made in the indicated
+    subplot window.  The plot is of yarg versus xarg, or, if
+    xarg is empty, of yarg against 1:length(yarg).  The plot is
+    a line plot, or, if parg is not empty, a scatterplot with
+    character parg.  If tit is nonempty, the title is set to tit. 
+    If ax is nonempty, the axes are set to ax; if hld is nonempty,
+    the plot is held (hld ==1) or released (hld == 0) afterwards.
+ 
+    The method used to perform these actions works under both v3.5
+    and v4.0 of MATLAB.
+
+  See Also
+    Scripts in Adapt, Blocky, Ideal, and Tour
+    MATLABVERSION
+
+ VisuThresh -- Visually calibrated Adaptive Smoothing
+  Usage
+    x = VisuThresh(y)
+  Inputs
+    y      Signal upon which to perform visually calibrated Adaptive Smoothing
+    type   Type of thresholding, either 'Soft' (default) or 'Hard'
+  Outputs
+    x      Result
+
+ References
+    ``Ideal Spatial Adaptation via Wavelet Shrinkage''
+    by D.L. Donoho and I.M. Johnstone.
+
+ WaitUntil -- Burn up CPU cycles until sec seconds elapse from oldclock
+  Usage
+    WaitUntil(oldclock,sec)
+  Inputs
+    oldclock    old clock value
+    sec         number of seconds to wait
+
+  Side Effects
+    A pause of sec will be effected
+
+ WaveShrink -- Soft Threshold Shrinkage Applied to Wavelet Coefficients
+  Usage 
+    [xh,xwh] = WaveShrink(y,type,L,qmf)
+  Inputs
+    y      1-d signal. length(y)= 2^J
+               Normalized to noise level 1! (See NoiseNorm)
+    type   string. Type of shrinkage applied:
+               'Visu','SURE','Hybrid','MinMax','MAD'
+               Optional; default == 'Visu'
+    L      Low-Frequency cutoff for shrinkage (e.g. L=4)
+               Should have L << J!
+    qmf    Quadrature Mirror Filter for Wavelet Transform
+               Optional, Default = Symmlet 8.
+  Outputs 
+    xh     estimate, obtained by applying soft thresholding on
+           wavelet coefficients
+    xwh    Wavelet Transform of estimate
+
+  Description
+    WaveShrink smooths noisy data presumed to have noise level 1
+    by transforming it into the wavelet domain, applying soft
+    thresholding to the wavelet coefficients and inverse transforming.
+
+    The theory underlying these methods is described in a variety of
+    papers by D.L. Donoho and I.M. Johnstone.
+
+    The different methods of selecting thresholds are detailed
+    in their articles.
+
+  See Also
+        FWT_PO, IWT_PO, MakeONFilter, NoiseNorm, RigorShrink
+
+ WhiteNoise -- Version-independent white noise generator
+  Usage
+    y = WhiteNoise(x)
+  Inputs
+    x     nonempty matrix
+  Outputs
+    y     matrix shaped like x, filled with
+          standard normal random numbers.
+
+  Description
+    The method used avoids warning messages under both
+    MATLAB v3.5 and v4.0.
+
+  See Also
+    MATLABVERSION
+
+ Wiener -- Wiener filter.
+ Usage
+   out = wiener(Noisy,in,sigma)
+ Inputs
+   Noisy		Noisy input signal.
+   in			Original signal.
+   sigma		s.d of the additve GWN
+ Outputs
+   out		Restored image.
+
+ Wiener -- Wiener filter for images.
+ Usage
+   out = Wiener2(Noisy,in,sigma)
+ Inputs
+   Noisy		Noisy input signal.
+   in			Original signal.
+   sigma		s.d of the additve GWN
+ Outputs
+   out		Restored image.
+
+ WignerDist -- Alias-Free Wigner-Ville Distribution
+  Usage
+    afwig = WignerDist(sig)
+  Inputs
+    sig     1-d signal
+  Outputs
+    afwig   complex-valued matrix representing the alias-free
+            Wigner-Ville distribution of zero-extended signal with
+            rows corresponding to frequencies and columns corresponding
+            to times.
+
+  Side Effects
+    Image Plot of the alias-free Wigner-Ville distribution
+
+  See Also
+	Interpol2
+
+  References
+   Mallat's book, sections 4.5.1 and 4.5.4
+
+ WindowFT -- Window Fourier Transform
+  Usage
+    specgm = WindowFT(sig,w,m,Name,titl)
+  Inputs
+    sig      1-d signal
+    w        window half-length, default = n/2
+    m        inter-window spacing, default=1
+    Name     string: 'Rectangle', 'Hanning', 'Hamming',
+             'Gaussian', 'Blackman'; Default is 'Rectangle'
+    titl     Optional Title String Modifier
+  Outputs
+    specgm   Window Fourier Transform of sig, n+1 by n complex matrix
+  Side Effects
+    Image Plot of the Window Fourier Transform
+  Description
+  Algorithm
+     supposes signal is non-periodic, i.e. zero-padded
+  Example
+    sig = ReadSignal('Caruso');
+    sig = sig(1:128);
+    specgm = WindowFT(sig);
+  See Also
+    MakeWindow IWindowFT
+  References
+    Mallat, "A Wavelet Tour in Signal Processing"; 
+            4.2.3 Discrete Windowed Fourier Transform.
+
+ WindowMeyer -- auxiliary window function for Meyer wavelets.
+  Usage
+    nu = WindowMeyer(xi,deg)
+  Inputs
+    xi     abscissa values for window evaluation
+    deg    degree of the polynomial defining Nu on [0,1]
+           1 <= deg <= 3
+  Outputs
+    nu     polynomial of degree 'deg' if x in [0,1]
+           1 if x > 1 and 0 if x < 0.
+  See Also
+    UnfoldMeyer, FoldMeyer
+
+ WP2dTour -- 2d Wavelet Packet Analysis in Adaptively Chosen Basis
+  Usage
+    [bb,stats,coef] = WP2dTour(img,MaxDeep,qmf[,titlestr])
+  Inputs
+    img        2-d image; size n by n, n dyadic
+    MaxDeep    integer; limit on max depth of tree in best basis search
+    qmf        quadrature mirror filter
+    titlestr   string; name of signal
+  Outputs
+    bb         basis quadtree of best basis
+    stats      stat quadtree of best basis
+    coef       coefficients in best basis
+
+  Description
+    Perform an adaptive wavelet packet analysis on the given image,
+    selecting the best basis and then plotting the WP coefficients
+    for this basis along with the image overlaid by its 2-d partition.
+
+ WP2dTour -- 2d Wavelet Packet Analysis in Adaptively Chosen Basis
+  Usage
+    [bb,stats,coef] = WP2dTour(img,MaxDeep,qmf[,titlestr])
+  Inputs
+    img        2-d image; size n by n, n dyadic
+    MaxDeep    integer; limit on max depth of tree in best basis search
+    qmf        quadrature mirror filter
+    titlestr   string; name of signal
+  Outputs
+    bb         basis quadtree of best basis
+    stats      stat quadtree of best basis
+    coef       coefficients in best basis
+
+  Description
+    Perform an adaptive wavelet packet analysis on the given image,
+    selecting the best basis and then plotting the WP coefficients
+    for this basis along with the image overlaid by its 2-d partition.
+
+ WPAnalysis -- Dyadic table of all Wavelet Packet coefficients
+  Usage
+    wp = WPAnalysis(x,D,qmf) 
+  Inputs
+    x        array of dyadic length n=2^J
+    D        degree of finest frequency partition
+    qmf      orthonormal quadrature mirror filter 
+  Outputs
+    wp       array of Wavelet Packet Decompositions
+             Coefficients for frequency interval
+             [b/2^d,(b+1)/2^d] is stored in
+             wp(packet(d,b,n),d+1)
+
+  Description
+    Creates a Wavelet Packet table of maximum depth D for the
+    signal specified by x.
+
+  See Also
+    WPSynthesis, WPTour, DownDyadHi, DownDyadLo
+
+  References
+    R.R. Coifman, Y. Meyer, C. Quake and M.V. Wickerhauser
+
+ WPAtomicSynthesis -- Wavelet Packet Synthesis from Atom List
+  Usage
+    sig = WPAtomicSynthesis(atomic,wp,qmf)
+  Inputs
+    atomic     1-d atomlist
+    wp         packet table, ignored except for size
+    qmf        quadrature mirror filter filter
+  Outputs
+    sig        the sum of the indicated Time-Frequency Atoms
+
+  See Also
+    WPPursuit, FWPAtomicSynthesis
+
+ The basis pursuit algorithm in a wavelet packet dictionnary is
+ not yet implemented in Wavelab. It is implemented in the LastWave
+ software, which is available on the Internet at
+ http://www.cmap.polytechnique.fr/users/www.bacry
+ WPDeNoise -- De-Noising in an adaptively chosen WP basis
+  Usage
+    [clean,bb,st] = WPDeNoise(x,D,qmf)
+  Inputs
+    x       1-d signal to be de-noised.
+    D       maximum depth of basis tree
+    qmf     quadrature mirror filter for frequency splitting
+  Outputs
+    clean   cleaned signal
+    bb      basis tree naming basis in which de-noising was done
+    st      stat tree: statistics driving basis search
+
+  Description
+   1. Assumes noise level == 1
+   2. Uses Stein Unbiased Estimate of risk to evaluate basis
+   3. Uses Coifman-Wickerhauser Best Basis algorithm to select
+      best basis
+
+  See Also
+   WaveShrink
+
+ WPImpulse -- WPAnalysis of an individual Wavelet Packet
+  Usage
+    dwp = WPImpulse(wp,d,b,k,qmf)
+  Inputs
+    wp      packet table, ignored except for size
+    d,b,k   1-d packet-index
+    qmf     quadrature mirror filter 
+  Outputs
+    dwp     packet table -- complete wavelet packet analysis of
+            wavelet packet (d,b,k)
+
+  See Also
+    WPAtomicSynthesis, WPPursuit
+
+ WPMPursuitTour -- Wavelet Packet atomic decomposition
+  Usage
+    [wp, btree] = WPMPursuitTour(Format,x,D,qmf [,maxits,title])
+  Inputs  
+    x       1-d signal to analyze by Wavelet Packets
+    D       fineness of frequency splitting
+    qmf     quadrature mirror filter (e.g. Coiflet c3)
+    natom   maximum number of atoms to extract by Matching Pursuit
+    title   name of signal
+  Outputs 
+    atomic  atoms list, wavelet packet dictionary (see WPPursuit)
+    resid   residual
+
+
+  See Also
+    WPAnalysis, BestBasis, PlotPhasePlane, PlotBasisTree
+
+ WPPursuit -- Atomic Decomposition into Wavelet Packets by Matching Pursuit
+  Usage
+    atomic = WPPursuit(x,D,qmf,natom,frac,show)
+  Inputs
+    x        signal of dyadic length to be decomposed
+    natom    max # of atoms desired
+    frac     min fraction total signal energy to enter
+    D,qmf    usual Wavelet Packets parameters
+  Outputs
+    atomic    parameters of atomic decomposition
+
+  See Also
+    PlotAtomicPhase, WPSynthesis
+
+  References
+    S. Mallat and S. Zhang, ``Matching Pursuits with Time-Frequency
+    Dictionaries,'' IEEE Trans. Signal Proc., 41(12), pp. 3397-3415, 1993.
+
+ WPPursuitBF -- Matching Pursuit using Wavelet Packet Dictionary with backfitting
+  Usage
+    atomic = WPPursuitBF(x,D,qmf,natom,frac)
+  Inputs
+    x        signal of dyadic length to be decomposed
+    natom    max # of atoms desired
+    frac     min fraction total signal energy to enter
+    D,qmf    usual Wavelets Packets parameters
+    show     plot intermediate results? 0=no, 1=yes
+  Outputs
+    atomic   parameters of atomic decomposition
+    normres  norm of residuals from each step
+
+  Side Effects
+    If show=1, intermediate results are plotted
+
+  See Also
+    PlotAtomicPhasePlane, WPImpulse, WPAnalysis, WPPursuit
+
+ WPPursuitTour -- Wavelet Packet atomic decomposition
+  Usage
+    [wp, btree] = WPPursuitTour(Format,x,D,qmf [,maxits,title])
+  Inputs  
+    Format  string: 'S' for sequential display of four figures
+                    'P' for four-panel display  
+    x       1-d signal to analyze by Wavelet Packets
+    D       fineness of frequency splitting
+    qmf     quadrature mirror filter (e.g. Coiflet c3)
+    natom   maximum number of atoms to extract by Matching Pursuit
+    title   name of signal
+  Outputs 
+    atomic  atoms list, wavelet packet dictionary (see WPPursuit)
+    resid   residual
+
+  Side Effects
+    plot of Wavelet Packet Synthesis Table
+    plot of Wavelet Packet Residuals Table
+    plot of Compression Numbers
+    plot of phase plane
+
+  Description
+    The format string controls whether all four displays
+    are drawn as subplots in one figure, or whether they are 
+    drawn one-after-the-other on the same figure.
+
+    The global PREFERIMAGEGRAPHICS controls whether the phase
+    portrait is done using ``image'' graphics (if =1) or ``plot''
+    graphics (if =0).
+
+  See Also
+    WPAnalysis, BestBasis, PlotPhasePlane, PlotBasisTree
+
+ WPSynthesis -- Synthesize signal from wavelet packet coefficients
+  Usage
+    x = WPSynthesis(btree,wp,qmf)
+  Inputs
+     btree    basis tree indicating wavelet packet to use
+     wp       wavelet packet table
+     qmf      quadrature mirror filter
+  Outputs
+     x        1-d signal whose wavelet packet coefft's in
+              basis btree are in wp
+
+  Examples
+     [n,D] = dyadlength(signal);
+     qmf = MakeONFilter('Haar');
+     wp = WPAnalysis(signal,D,qmf);
+     stree = CalcStatTree(wp,'Entropy');
+     [btree,vtree] = BestBasis(stree,D);
+     signal2 = WPSynthesis(btree,wp,qmf); % signal == signal2
+ WPTour -- Wavelet packet decomposition & Best Basis analysis
+  Usage
+    [wp, btree] = WPTour(Format,x,D,qmf,title)
+  Inputs  
+    Format  string: 'S' for sequential display of four figures
+                    'P' for four-panel display  
+    x       1-d signal to analyze by Wavelet Packets
+    D       fineness of frequency splitting
+    qmf     quadrature mirror filter (e.g. Coiflet c3)
+    title   name of signal
+  Outputs
+    wp      Wavelet packet table (see WPAnalysis)
+    btree   basis tree of best time-frequency basis
+
+  Description
+    The format string controls whether all four displays
+    are drawn as subplots in one figure, or whether they are
+    drawn one-after-the-other on the same figure
+
+    The global PREFERIMAGEGRAPHICS controls whether the phase
+    portrait is done using ``image'' graphics (if =1) or ``plot''
+    graphics (if =0).
+
+  Side Effects
+    plot of Wavelet packet Table
+    tree plot, best basis
+    phase plot, best basis
+    printout, entropy, best basis
+
+  See Also
+    WPAnalysis, BestBasis, PlotPhasePlane, PlotBasisTree
+
+ WrapAround -- Circular map onto 1:n
+  Usage
+    indnew = WrapAround(ind, n)
+  Inputs
+    ind     vector to wrap
+    n       length of wrap
+
+  Description
+    indnew = (ind <= n) .* ind + (ind > n) .* (ind - n);
+
+ WTMM -- Wavelet Transform Maximum Modulus
+  Usage
+    maxmap = WTMM(cwt,par)
+  Inputs
+    cwt    Output of CWT
+    par    optional. If present, keep thresholds only
+           above a certain value. UNUSED AT MOMENT
+  Outputs
+    maxmap binary array indicating presence of max or not
+
+  Description
+    Used to calculate fractal exponents etc. 
+
+ WTWPTour -- Wavelet packet decomposition & Best Basis analysis
+  Usage
+    [wp, btree] = WPTour(Format,x,D,qmf,title)
+  Inputs  
+    Format  string: 'S' for sequential display of four figures
+                    'P' for four-panel display  
+    x       1-d signal to analyze by Wavelet Packets
+    D       fineness of frequency splitting
+    qmf     quadrature mirror filter (e.g. Coiflet c3)
+    title   name of signal
+  Outputs
+    wp      Wavelet packet table (see WPAnalysis)
+    btree   basis tree of best time-frequency basis
+
+
+  See Also
+    WPTour, WPAnalysis, BestBasis, PlotPhasePlane, PlotBasisTree
+
+ WVDist -- Wigner-Ville Distribution
+  Usage
+    wig = WVDist(sig)
+  Inputs
+    sig    1-d signal of dyadic length n=2^J
+  Outputs
+   wig     complex-valued matrix representing the Wigner-Ville
+           distribution of zero-extended signal with rows corresponding
+           to frequencies and columns corresponding to times.
+
+  Side Effects
+   Image Plot of the Wigner-Ville distribution
+
+  See Also
+   WVDist_AF, TFDist_AF, ImagePhasePlane
+
+ WVDist_AF -- Alias-Free Wigner-Ville Distribution
+  Usage
+    afwig = WVDist_AF(sig)
+  Inputs
+    sig     1-d signal
+  Outputs
+    afwig   complex-valued matrix representing the alias-free
+            Wigner-Ville distribution of zero-extended signal with
+            rows corresponding to frequencies and columns corresponding
+            to times.
+
+  Side Effects
+    Image Plot of the alias-free Wigner-Ville distribution
+
+  See Also
+    WVDist, WVDist_AF, ImagePhasePlane
+
+  References
+   Jechang Jeong and William J. Williams,
+   "Alias-Free Generalized Discrete-Time Time-Frequency Distribution,"
+   IEEE Transactions on Signal Processing, vol. 40, pp. 2757-2765.
+
+ Find all position within the real interval (a,b) at which the
+ polynomial P changes sign.
+    
+    
+%   
+% Part of WaveLab Version 802
+% Built Sunday, October 3, 1999 8:52:27 AM
+% This is Copyrighted Material
+% For Copying permissions see COPYING.m
+% Comments? e-mail wavelab@stat.stanford.edu
+%   
+    

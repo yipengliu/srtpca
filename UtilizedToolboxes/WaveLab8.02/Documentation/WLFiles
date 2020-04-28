@@ -1,0 +1,487 @@
+*** WaveLab: ***
+Contents.m      startup.m     README    
+InstallMEX.m    WavePath.m    
+
+*** WaveLab:Biorthogonal ***
+Contents.m          FWT_PB.m      MakeBSFilter.m       
+DownDyad_SBS.m      FWT_PBS.m     MakeBSWavelet.m      
+DownDyadHi_PBS.m    FWT_SBS.m     MirrorSymmFilt.m     
+DownDyadLo_PBS.m    IWT2_PB.m     PlotPBSMultiRes.m    
+dyadpartition.m     IWT2_PBS.m    symm_aconv.m         
+extend.m            IWT2_SBS.m    symm_iconv.m         
+FWT2_PB.m           IWT_PB.m      UpDyad_SBS.m         
+FWT2_PBS.m          IWT_PBS.m     UpDyadHi_PBS.m       
+FWT2_SBS.m          IWT_SBS.m     UpDyadLo_PBS.m       
+
+*** WaveLab:Continuous ***
+AWT.m                    CWT.m                 PlotMultiSpectrum.m      
+BuildSkelMap.m           ExtractRidge.m        PlotRidges.m             
+BuildSkelMapFast.m       IAWT.m                PlotSkelMap.m            
+CalcCWTNorms.m           ImageCWT.m            PlotThermoPartition.m    
+CalcCWTPars.m            ImageRWT.m            PruneSkelMap.m           
+CalcCWTScale.m           ImageWTMM.m           Ridge_AWT.m              
+CalcFracSpectrum.m       IRWT.m                RWT.m                    
+CalcGenFracDimen.m       MM_RWT.m              RWTscale.m               
+CalcMomentGenFun.m       PlotGenFracDimen.m    SkelMap.m                
+CalcThermoPartition.m    PlotMomentGenFun.m    WTMM.m                   
+Contents.m               
+
+*** WaveLab:Datasets ***
+BrowseImages.m    ReadImage.m        laser.txt         
+Contents.m        ReadSignal.m       lenna.txt         
+ImageFig.m        barb.txt           lincoln.txt       
+Make2dSignal.m    barton.txt         mriscan.txt       
+MakeBrownian.m    canaletto.txt      msignal.txt       
+MakeCantor.m      caruso.txt         phone.txt         
+makediag.m        coifman.txt        RaphNMR.txt       
+MakeFractal.m     daubechies.txt     seismic.txt       
+MakeImage.m       esca.txt           SonRemy.txt       
+MakeProcess.m     fingerprint.txt    sunspots.txt      
+MakeSignal.m      greasy.txt         transients.txt    
+mat2raw.m         HochNMR.txt        tweet.txt         
+raw2mat.m         lady.txt           
+
+*** WaveLab:DeNoising ***
+CohWave.m            InvShrink.m       ThreshCP.m          
+Contents.m           MinMaxThresh.m    ThreshWave.m        
+CPDeNoise.m          MultiHybrid.m     ThreshWave2.m       
+cyclespin2.m         MultiMAD.m        ThreshWP.m          
+GWN.m                MultiSURE.m       TIDenoiseHard2.m    
+GWN2.m               MultiVisu.m       TIDenoiseSoft2.m    
+GWNoisy.m            NormNoise.m       ValSUREThresh.m     
+GWNoisy2.m           SNR.m             VisuThresh.m        
+HardThresh.m         SoftThresh.m      WaveShrink.m        
+HT.m                 ST.m              Wiener.m            
+HT2.m                ST2.m             Wiener2.m           
+HybridThresh.m       SUREThresh.m      WPDeNoise.m         
+IdealWavDenoise.m    
+
+*** WaveLab:FastAlgorithms ***
+Contents.m    ISFT_PO.m             NonStdWaveMult.m    
+FNWT_PO.m     Mat2SparseNSForm.m    StdWaveMult.m       
+FSFT_PO.m     Mat2SparseSForm.m     StretchMatrix.m     
+INWT_PO.m     ndyad.m               
+
+*** WaveLab:Fractals ***
+Contents.m         FracScalExp.m    FracSingSpect.m    
+FracPartition.m    
+
+*** WaveLab:Interpolating ***
+AIDyadDown.m    DDRefine.m      MakeAIBdryFilter.m    
+AIDyadUp.m      FWT_AI.m        MakeAIFilter.m        
+AIRefine.m      FWT_DD.m        MakeDDBdryFilter.m    
+AIRefine2d.m    HCoarsen2d.m    MakeDDFilter.m        
+Contents.m      HRefine2d.m     PlotAIMultiRes.m      
+DDDyadDown.m    IWT_AI.m        PlotDDMultiRes.m      
+DDDyadUp.m      IWT_DD.m        
+
+*** WaveLab:Invariant ***
+BestShift.m         FWT_TI.m             MM2_DWT.m             
+CalcShiftStat.m     IMM2_DWT.m           MM_DWT.m              
+Contents.m          IMM_DWT.m            ModulusMaxima.m       
+DisplayDWT.m        IWT2_TI.m            PackShiftCoeff.m      
+DisplayDWTmaxr.m    IWT_ATrou.m          PlotColumns.m         
+FWT2_Atrou.m        IWT_Stat.m           PlotStatTable.m       
+FWT2_TI.m           IWT_TI.m             Stat2TI.m             
+FWT_ATrou.m         MakeATrouFilter.m    TI2Stat.m             
+FWT_Stat.m          MakeDyadFilter.m     UnpackShiftCoeff.m    
+
+*** WaveLab:Median ***
+Contents.m         MedITriadUp.m    QuadMedRef.m      
+FMIPT.m            PlotMRA_MT.m     triad.m           
+IMIPT.m            PlotMTCoeff.m    TriMergeSort.m    
+MedITriadDown.m    quadmedian.m     
+
+*** WaveLab:Median:HigherDegree ***
+BlockMedian.m    MedianInterp.m    realpolyroots.m    
+Contents.m       PlotPoly.m        ZeroX.m            
+localmaxima.m    
+
+*** WaveLab:Meyer ***
+CoarseMeyerCoeff.m    dst_ii.m            ITWT2_YM.m          
+CoarseMeyerProj.m     dst_iii.m           IWT2_YM.m           
+CombineCoeff.m        ExtendProj.m        IWT_YM.m            
+Contents.m            FineMeyerCoeff.m    PlotYMMultiRes.m    
+dct_ii.m              FineMeyerProj.m     QuasiDCT.m          
+dct_iii.m             FoldMeyer.m         QuasiDST.m          
+DetailMeyerCoeff.m    FTWT2_YM.m          SeparateCoeff.m     
+DetailMeyerProj.m     FWT2_YM.m           UnfoldMeyer.m       
+dst_i.m               FWT_YM.m            WindowMeyer.m       
+
+*** WaveLab:Orthogonal ***
+aconv.m               FWT_CDJV.m          MakeONFilter.m     
+CDJVDyadDown.m        FWT_IO.m            MakeWavelet.m      
+CDJVDyadUp.m          FWT_PO.m            MirrorFilt.m       
+Contents.m            iconv.m             PlotMultiRes.m     
+ContourMultiRes.m     ITWT2_PO.m          PlotSpikes.m       
+DisplayMultiRes.m     IWT2_PO.m           PlotWaveCoeff.m    
+DisplayWaveCoeff.m    IWT_CDJV.m          quad2ix.m          
+DownDyadHi.m          IWT_IO.m            quadlength.m       
+DownDyadLo.m          IWT_PO.m            reverse.m          
+dyad.m                lshift.m            rshift.m           
+dyad2ix.m             Make2dWavelet.m     UpDyadHi.m         
+dyadlength.m          MakeCDJVFilter.m    UpDyadLo.m         
+FTWT2_PO.m            MakeOBFilter.m      UpSample.m         
+FWT2_PO.m             
+
+*** WaveLab:Packets:One-D ***
+AutoCPTour.m         FPT_WP.m               PlotCoeffComparison.m    
+AutoWPTour.m         ImageGaborPhase.m      PlotCompressNumbers.m    
+BestBasis.m          ImagePacketPhase.m     PlotGaborPhase.m         
+CalcStatTree.m       ImagePhasePlane.m      PlotPacketTable.m        
+CalcTreeHeight.m     ImagePhaseVarious.m    PlotPhasePlane.m         
+CalcWPLocation.m     IPT_CP.m               PlotPhaseTiling.m        
+CompareStdBases.m    IPT_WP.m               PlotPhaseVarious.m       
+Contents.m           KLinCP.m               PlotWavePhase.m          
+CPAnalysis.m         MakeBasis.m            unfold.m                 
+CPSynthesis.m        MakeCosinePacket.m     UnpackBasisCoeff.m       
+CPTour.m             MakeONBell.m           UnpackStatValue.m        
+dct_iv.m             MakeWaveletPacket.m    WPAnalysis.m             
+DrawHeisenberg.m     node.m                 WPSynthesis.m            
+edgefold.m           PackBasisCoeff.m       WPTour.m                 
+edgeunfold.m         packet.m               WrapAround.m             
+fold.m               PlotBasisTree.m        WTWPTour.m               
+FPT_CP.m             
+
+*** WaveLab:Packets:Two-D ***
+Best2dBasis.m         CP2Tour.m                Plot2dBasisTree.m       
+BuildFBITree.m        dct2_iv.m                Plot2dPartition.m       
+Calc2dPktTable.m      DownQuad.m               qnode.m                 
+Calc2dSQTree.m        FPT2_CP.m                qpkt2ix.m               
+Calc2dStatTree.m      FPT2_WP.m                quadbounds.m            
+Calc2dTreeHeight.m    IPT2_CP.m                Unpack2dBasisCoeff.m    
+CalcEntropy.m         IPT2_WP.m                UpQuad.m                
+Contents.m            Make2dCosinePacket.m     WP2dTour.m              
+CP2dTour.m            Make2dWaveletPacket.m    WP2Tour.m               
+
+*** WaveLab:Pursuit ***
+Contents.m             FWPAtomicSynthesis.m    PlotSynthesisTable.m    
+CPAtomicSynthesis.m    FWPSynthesis.m          WPAtomicSynthesis.m     
+CPBPursuitTour.m       GaborPursuitTour.m      WPBPursuitTour.m        
+CPImpulse.m            ImageAtomicPhase.m      WPImpulse.m             
+CPMPursuitTour.m       ix2pkt.m                WPMPursuitTour.m        
+CPPursuit.m            MakeSynthesisTable.m    WPPursuit.m             
+CPPursuitBF.m          MonitorPursuit.m        WPPursuitBF.m           
+CPPursuitTour.m        pkt2ix.m                WPPursuitTour.m         
+FCPSynthesis.m         PlotAtomicPhase.m       
+
+*** WaveLab:TimeFrequency ***
+CohenDist.m    MakeWindow.m        WignerDist.m    
+Contents.m     Ridge_WindowFT.m    WindowFT.m      
+Interpol2.m    Spectrogram.m       WVDist.m        
+IWindowFT.m    TFDist_AF.m         WVDist_AF.m     
+
+*** WaveLab:Utilities ***
+AppendTitle.m    LockAxes.m            ShapeAsRow.m    
+AutoImage.m      log2lin.m             ShapeLike.m     
+Contents.m       MakeTiledFigures.m    UnlockAxes.m    
+CutDyad.m        PadDyad.m             versaplot.m     
+GrayImage.m      pic256.m              WaitUntil.m     
+HitAnyKey.m      RegisterPlot.m        WhiteNoise.m    
+ifprint.m        rnshift.m             
+
+*** WaveLab:Documentation ***
+ADDINGNEWFEATURES.m    GETTINGSTARTED.m    SUPPORT.m     
+BUGREPORT.m            INSTALLATION.m      THANKS.m      
+Contents.m             LIMITATIONS.m       VERSION.m     
+COPYING.m              PAYMENT.m           WARRANTY.m    
+DATASTRUCTURES.m       READING.m           WLFiles       
+FEEDBACK.m             REGISTRATION.m      
+
+*** WaveLab:Papers:Adapt ***
+AdaptCleanup.m    adfig08.m       EvalRigor.m          
+AdaptDemo.m       adfig09.m       EvalSure.m           
+AdaptFig.m        adfig10.m       IMJPlotMultiRes.m    
+AdaptInit.m       adfig11.m       JamesStein.m         
+AdaptIntro.m      adfig12.m       opttrunc.m           
+adfig01.m         adfig13.m       RigorThresh.m        
+adfig02.m         adfig14.m       rms.m                
+adfig03.m         adfig15.m       SplineInit.m         
+adfig04.m         AutoTrunc.m     SplineUChoose.m      
+adfig05.m         CoronaJS.m      SplineURisk.m        
+adfig06.m         EvalFix.m       steintrunc.m         
+adfig07.m         EvalHybrid.m    WaveJS.m             
+
+*** WaveLab:Papers:Asymp ***
+asfig01.m    asfig07.m         AsympDemo.m     
+asfig02.m    asfig08.m         AsympFig.m      
+asfig03.m    asfig09.m         AsympInit.m     
+asfig04.m    asfig10.m         AsympIntro.m    
+asfig05.m    AsympCleanup.m    fishrand.m      
+asfig06.m    
+
+*** WaveLab:Papers:Blocky ***
+aifig1.m    aifig6.m           BlockyFig.m         
+aifig2.m    aifig7.m           BlockyInit.m        
+aifig3.m    BlockyCleanup.m    BlockyIntro.m       
+aifig4.m    BlockyDemo.m       MakeAllFilters.m    
+aifig5.m    
+
+*** WaveLab:Papers:Correl ***
+corfig01.m         CorrelInit.m       MAD.m                   
+corfig02.m         CorrelIntro.m      MultiSUREThresh.m       
+corfig03.m         cortab01.m         NoiseFrac.m             
+corfig04.m         detect.m           Noisegen.m              
+corfig05.m         errtot.m           PlotWaveCoeffLocal.m    
+CorrelCleanup.m    fbm.m              ScaleMaker.m            
+CorrelDemo.m       IMJPlotSpikes.m    StatShrink.m            
+CorrelFig.m        LevelShrink.m      StepPlot.m              
+
+*** WaveLab:Papers:Ideal ***
+claxis.m          IdealWave.m    idfig06.m             
+IdealCleanup.m    idealwts.m     idfig07.m             
+IdealDemo.m       idfig01.m      idfig08.m             
+IdealFig.m        idfig02.m      idfig09.m             
+IdealInit.m       idfig03.m      idfig10.m             
+IdealIntro.m      idfig04.m      IMJPlotWaveCoeff.m    
+IdealKern.m       idfig05.m      
+
+*** WaveLab:Papers:MIPT ***
+mifig21.m    mifig42.m        MIPTInit.m          
+mifig22.m    mifig51.m        MIPTIntro.m         
+mifig23.m    mifig52.m        MIPTThreshold.m     
+mifig24.m    MIPTCleanup.m    mitable51.m         
+mifig31.m    MIPTDemo.m       MultiLMIRefine.m    
+mifig41.m    MIPTFig.m        MultiMedRefine.m    
+
+*** WaveLab:Papers:MinEntSeg ***
+bloxplot.m             mefig208.m    mefig601.m       
+Compare2.m             mefig209.m    mefig602.m       
+FastAllSeg.m           mefig210.m    mefig603.m       
+FastEntProfile.m       mefig211.m    mefig604.m       
+MakeAIRightFilter.m    mefig212.m    mefig605.m       
+MakeAISegFilter.m      mefig213.m    MESCleanup.m     
+MakeBumps.m            mefig214.m    MESDemo.m        
+MakeMESTestSig.m       mefig302.m    MESFig.m         
+mefig201.m             mefig303.m    MESInit.m        
+mefig202.m             mefig304.m    MESIntro.m       
+mefig203.m             mefig305.m    off_filter.m     
+mefig204.m             mefig306.m    PrintMEFigs.m    
+mefig205.m             mefig401.m    Seg_Pursuit.m    
+mefig206.m             mefig402.m    SharpPart.m      
+mefig207.m             
+
+*** WaveLab:Papers:RiskAnalysis ***
+addnoise.m               Figure8.m                  RiskFig2.m         
+CalcNoiseLevelRisk.m     Figure9.m                  RiskFig3.m         
+CalcProjRisk.m           Gen_data.m                 RiskFig4.m         
+CalcSamplesizeRisk.m     Gen_signal.m               RiskFig5.m         
+CalcThreshRisk.m         make_plot.m                RiskFig6.m         
+CalcThreshScaleRisk.m    mtitle.m                   RiskFig7.m         
+CalcThreshValueRisk.m    MyCalcThreshScaleRisk.m    RiskFig8.m         
+clear_risk_global.m      NewZoom.m                  RiskFig9.m         
+clear_updates.m          plot_newdata.m             RiskInit.m         
+close_updates.m          PR.m                       SignalPlot.m       
+coeffrisk.m              redo_plot.m                sonify.m           
+Denoise.m                reset_updates1.m           take_action.m      
+do_button.m              reset_updates2.m           Transformplot.m    
+Figure10.m               risk_global.m              Update_figs.m      
+Figure11.m               RiskBrowser.m              updateplots.m      
+Figure12.m               RiskDemo.m                 use_nlevel.m       
+Figure13.m               RiskFig.m                  use_ntypes.m       
+Figure3.m                RiskFig1.m                 use_pltoption.m    
+Figure4.m                RiskFig10.m                use_siglen.m       
+Figure5.m                RiskFig11.m                use_threshold.m    
+Figure6.m                RiskFig12.m                use_wavelet.m      
+Figure7.m                RiskFig13.m                
+
+*** WaveLab:Papers:ShortCourse ***
+FHT_Med.m                scfig02.m    scfig18.m        
+FigNameString.m          scfig03.m    scfig19.m        
+FWT_SegAI.m              scfig04.m    scfig20.m        
+HCoarsen.m               scfig05.m    scfig21.m        
+IHT_Med.m                scfig06.m    scfig22.m        
+IWT_SegAI.m              scfig07.m    scfig23.m        
+MakeAISegmentFilter.m    scfig08.m    scfig24.m        
+MedTriadDown.m           scfig09.m    scfig25.m        
+MedTriadUp.m             scfig10.m    scfig26.m        
+PlotSAIMultiRes.m        scfig11.m    scfig27.m        
+SAIDyadDown.m            scfig12.m    scfig28.m        
+SAIDyadUp.m              scfig13.m    SCInit.m         
+SCCleanup.m              scfig14.m    SCIntro.m        
+SCDemo.m                 scfig15.m    SegRefine.m      
+SCFig.m                  scfig16.m    SRefine.m        
+scfig01.m                scfig17.m    triadlength.m    
+
+*** WaveLab:Papers:SpinCycle ***
+CSCleanup.m    cspinf08.m    cspinf19.m             
+CSDemo.m       cspinf09.m    cspinf20.m             
+CSFig.m        cspinf10.m    cspinf21.m             
+CSInit.m       cspinf11.m    cyclespin.m            
+CSIntro.m      cspinf12.m    cyclespinning.m        
+cspinf01.m     cspinf13.m    FourierDeNoise.m       
+cspinf02.m     cspinf14.m    Modulate.m             
+cspinf03.m     cspinf15.m    PrintAllCSpinFigs.m    
+cspinf04.m     cspinf16.m    SpinCycleInit.m        
+cspinf05.m     cspinf17.m    SpinDemo.m             
+cspinf06.m     cspinf18.m    WPDeNoise_TI.m         
+cspinf07.m     
+
+*** WaveLab:Papers:Tour ***
+CompressoGram.m    toufig05.m    toufig14.m        
+fasthist.m         toufig06.m    toufig15.m        
+LogoGram.m         toufig07.m    TourCleanup.m     
+NoiseMaker.m       toufig08.m    TourDemo.m        
+rootogram.m        toufig09.m    TourFig.m         
+toufig01.m         toufig10.m    TourInit.m        
+toufig02.m         toufig11.m    TourIntro.m       
+toufig03.m         toufig12.m    WaveCoeffLim.m    
+toufig04.m         toufig13.m    
+
+*** WaveLab:Papers:VillardDeLans ***
+Contents.m       vdlfig02.m    vdlfig08.m    
+TreeDeNoise.m    vdlfig03.m    vdlfig09.m    
+VdLCleanup.m     vdlfig04.m    vdlfig10.m    
+VdLDemo.m        vdlfig05.m    vdlfig11.m    
+VdLFig.m         vdlfig06.m    VdLInit.m     
+vdlfig01.m       vdlfig07.m    VdLIntro.m    
+
+*** WaveLab:Workouts:BestOrthoBasis ***
+BBWork01.m    BBWork20.m    BBWork42.m            
+BBWork02.m    BBWork21.m    BBWork43.m            
+BBWork03.m    BBWork22.m    BBWork61.m            
+BBWork04.m    BBWork31.m    Compare4Compress.m    
+BBWork11.m    BBWork32.m    Contents.m            
+BBWork12.m    BBWork41.m    
+
+*** WaveLab:Workouts:MatchingPursuit ***
+Compare4Decomp.m    MPWork22.m    MPWork62.m               
+Contents.m          MPWork31.m    PlotEquivDimension.m     
+CPPrintPursuit.m    MPWork32.m    PlotEquivRate.m          
+MPWork00.m          MPWork43.m    PlotSemiCompressNum.m    
+MPWork21.m          MPWork61.m    WPPrintPursuit.m         
+
+*** WaveLab:Workouts:MultiFractal ***
+Contents.m    MFWork01.m    MFWork02.m    
+
+*** WaveLab:Workouts:Toons ***
+BB_CP.m              toon0331.m    toon0551.m    
+BB_WP.m              toon0332.m    toon0552.m    
+Contents.m           toon0333.m    toon0553.m    
+DoAllToons.m         toon0334.m    toon0554.m    
+KeepBiggest.m        toon0335.m    toon0561.m    
+KeepFirst.m          toon0341.m    toon0562.m    
+PlotLevelNorms.m     toon0342.m    toon0563.m    
+PlotOrderedCoef.m    toon0411.m    toon0564.m    
+PrintAllToons.m      toon0412.m    toon0565.m    
+toon0111.m           toon0421.m    toon0711.m    
+toon0112.m           toon0422.m    toon0721.m    
+toon0113.m           toon0431.m    toon0731.m    
+toon0114.m           toon0432.m    toon0732.m    
+toon0121.m           toon0433.m    toon0741.m    
+toon0131.m           toon0441.m    toon0742.m    
+toon0132.m           toon0442.m    toon0811.m    
+toon0140.m           toon0443.m    toon0821.m    
+toon0141.m           toon0444.m    toon0831.m    
+toon0142.m           toon0451.m    toon0832.m    
+toon0151.m           toon0511.m    toon0841.m    
+toon0152.m           toon0512.m    toon0842.m    
+toon0161.m           toon0513.m    toon1001.m    
+toon0171.m           toon0514.m    toon1002.m    
+toon0172.m           toon0521.m    toon1003.m    
+toon0173.m           toon0522.m    toon1004.m    
+toon0174.m           toon0523.m    toon1005.m    
+toon0181.m           toon0524.m    toon1006.m    
+toon0182.m           toon0531.m    toon1007.m    
+toon0183.m           toon0532.m    toon1101.m    
+toon0184.m           toon0533.m    toon1102.m    
+toon0211.m           toon0541.m    toon1103.m    
+toon0212.m           toon0542.m    toon1104.m    
+toon0221.m           toon0543.m    toon1105.m    
+toon0222.m           toon0544.m    toon1106.m    
+toon0231.m           toon0545.m    toon1107.m    
+toon0232.m           toon0546.m    toon1611.m    
+toon0233.m           toon0547.m    toon1612.m    
+toon0311.m           toon0548.m    toon1613.m    
+toon0312.m           
+
+*** WaveLab:Browsers:One-D ***
+clr_global.m      do_button.m          live_wpcompress.m    
+Contents.m        do_cpcompress.m      live_wtcompress.m    
+def_bell.m        do_detail.m          NewShrink.m          
+def_data.m        do_global.m          NewZoom.m            
+def_entropy.m     do_scalegram.m       plot_new_data.m      
+def_filter.m      do_scalogram.m       reset_slider.m       
+def_nlevel.m      do_shrinkage.m       setfigure.m          
+def_noise.m       do_spectrum.m        sonify.m             
+def_nonlin.m      do_transform.m       spectrum.m           
+def_shrinker.m    do_wpcompress.m      update_plot.m        
+def_siglen.m      do_wtcompress.m      wl_spectrum.m        
+def_signal.m      live_cpcompress.m    WLBrowser.m          
+def_tut.m         live_thresh.m        WLBrowserIntro.m     
+do_action.m       
+
+*** WaveLab:Browsers:WaveTour ***
+Contents.m    WTBrowser.m    WTBrowser_Window.m    
+
+*** WaveLab:Books:WaveTour:WTCh02 ***
+wt02fig01.m    WTCh02Demo.m    
+
+*** WaveLab:Books:WaveTour:WTCh04 ***
+Analytic.m        wt04fig03.m    wt04fig15.m     
+ImageAWTnew.m     wt04fig05.m    wt04fig16.m     
+log2linChap4.m    wt04fig06.m    wt04fig17.m     
+MakeChirps.m      wt04fig07.m    wt04fig18.m     
+MakeWindow.m      wt04fig08.m    wt04fig19.m     
+ourphase.m        wt04fig11.m    wt04fig20.m     
+quadinterpol.m    wt04fig12.m    wt04fig21.m     
+realpow.m         wt04fig13.m    wt04fig22.m     
+WindowFT.m        wt04fig14.m    WTCh04Demo.m    
+
+*** WaveLab:Books:WaveTour:WTCh05 ***
+wt05fig04.m    wt05fig06.m    WTCh05Demo.m    
+wt05fig05.m    
+
+*** WaveLab:Books:WaveTour:WTCh06 ***
+aconv2.m           RightShift.m    wt06fig09.m     
+CalcFtheo.m        wt06fig01.m     wt06fig10.m     
+cantor.m           wt06fig03.m     wt06fig11.m     
+ConjGrad.m         wt06fig05.m     wt06fig16.m     
+DownShift.m        wt06fig06.m     wt06fig18.m     
+L.m                wt06fig07.m     wt06fig20.m     
+mMakeBrownian.m    wt06fig08.m     WTCh06Demo.m    
+
+*** WaveLab:Books:WaveTour:WTCh07 ***
+beta01.m                 wt07fig01.m    wt07fig11.m     
+Display2dProjV.m         wt07fig02.m    wt07fig14.m     
+DisplayProjV.m           wt07fig03.m    wt07fig15.m     
+LinearSpline.m           wt07fig04.m    wt07fig20.m     
+mallatPlotWaveCoeff.m    wt07fig05.m    wt07fig21.m     
+Meyerhath.m              wt07fig06.m    wt07fig22.m     
+modulo.m                 wt07fig07.m    wt07fig23.m     
+newPlotSpikes.m          wt07fig08.m    wt07fig24.m     
+newPlotWaveCoeff.m       wt07fig09.m    wt07fig26.m     
+NormedIFFT.m             wt07fig10.m    WTCh07Demo.m    
+Sigma8.m                 
+
+*** WaveLab:Books:WaveTour:WTCh08 ***
+PlotMBandPlane.m       wt08fig04.m    wt08fig18.m     
+PlotSquareCPPlane.m    wt08fig06.m    wt08fig21.m     
+PlotSquareWPPlane.m    wt08fig08.m    WTCh08Demo.m    
+wt08fig02.m            
+
+*** WaveLab:Books:WaveTour:WTCh09 ***
+wt09fig01.m    wt09fig05.m    wt09fig09.m     
+wt09fig02.m    wt09fig07.m    wt09fig10.m     
+wt09fig03.m    wt09fig08.m    WTCh09Demo.m    
+wt09fig04.m    
+
+*** WaveLab:Books:WaveTour:WTCh10 ***
+convgauss.m          wt10fig01.m    wt10fig09.m     
+DiscrDenoise.m       wt10fig02.m    wt10fig11.m     
+DisStatTree.m        wt10fig03.m    wt10fig12.m     
+Filt_GWN.m           wt10fig04.m    wt10fig13.m     
+MyPlotBasisTree.m    wt10fig05.m    wt10fig14.m     
+Wien_Filt_GWN.m      wt10fig06.m    wt10fig15.m     
+Wienerdec.m          wt10fig07.m    WTCh10Demo.m    
+Wienerdec2.m         
+    
+    
+%   
+% Part of WaveLab Version 802
+% Built Sunday, October 3, 1999 8:52:27 AM
+% This is Copyrighted Material
+% For Copying permissions see COPYING.m
+% Comments? e-mail wavelab@stat.stanford.edu
+%   
+    
